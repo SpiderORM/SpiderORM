@@ -35,8 +35,8 @@ pip install -r requirements.txt
 Defina seus modelos de dados herdando da classe `Model` e especificando os campos desejados:
 
 ```python
-from models.model import Model
-from models.fields import CharField, IntegerField, DecimalField, FloatField, BooleanField, DateField, DateTimeField, ChoiceField, ImageField, FileField, URLField, ForeignKey
+from spiderweb_orm.models import Model
+from spiderweb_orm.fields import CharField, IntegerField, DecimalField, FloatField, BooleanField, DateField, DateTimeField, ChoiceField, ImageField, FileField, URLField, ForeignKey
 from datetime import date, datetime
 from decimal import Decimal
 
