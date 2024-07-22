@@ -1,3 +1,67 @@
+#EN
+### Additional features that can be added to the ORM to make it more robust and complete:
+
+1. **Model Relationships**
+   - **One-to-Many (ForeignKey)**
+     - We already have basic support for foreign keys, but we can enhance this with automatic loading of related data.
+   - **Many-to-Many**
+     - Add support for many-to-many relationships.
+
+2. **Advanced Queries**
+   - **More Advanced Filters**
+     - Implement more complex filter operators like lt, gt, lte, gte, in, contains, etc.
+
+3. **Migrations**
+   - Create a migration system to manage database schema changes over time.
+
+4. **Transactions**
+   - Add support for database transactions to ensure atomicity of operations.
+
+5. **Custom Validations**
+   - Allow fields to accept user-provided custom validation functions.
+
+6. **Cache**
+   - Implement a caching system to optimize database access and reduce latency.
+
+7. **Logging**
+   - Add logging features to facilitate operation tracking and debugging.
+
+8. **Support for Multiple Databases**
+   - Allow the ORM to connect to and work with different types of databases, such as PostgreSQL, MySQL, etc.
+
+9. **Soft Deletes**
+   - Add support for logical deletion, where records are not actually deleted from the database but marked as inactive.
+
+10. **Pagination**
+    - Implement support for result pagination when performing queries.
+
+11. **Eager Loading**
+    - Implement eager loading to optimize querying of related data and avoid N+1 issues.
+
+12. **Bulk Operations**
+    - Add support for bulk operations like bulk_insert, bulk_update, and bulk_delete.
+
+13. **Indexing**
+    - Add support for creating and managing database indexes to improve query performance.
+
+14. **Triggers and Stored Procedures**
+    - Allow the definition and execution of triggers and stored procedures in the database.
+
+15. **Serialization**
+    - Add methods to serialize and deserialize ORM objects into formats like JSON, XML, etc.
+
+16. **Auditing**
+    - Implement an auditing system to track changes to data.
+
+17. **Data Seeding**
+    - Add support for "seed data", allowing programmatic insertion of initial data into the database.
+
+18. **Command Line Interface (CLI)**
+    - Implement a CLI to facilitate tasks like migrations, seeding, etc.
+
+
+#PT
+
 Funcionalidades adicionais que podem ser adicionadas ao ORM para torná-lo mais robusto e completo:
 
 1. Relacionamentos Entre Modelos
