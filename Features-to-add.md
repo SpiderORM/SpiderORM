@@ -1,4 +1,4 @@
-#EN
+# EN
 ### Additional features that can be added to the ORM to make it more robust and complete:
 
 1. **Model Relationships**
@@ -60,7 +60,7 @@
     - Implement a CLI to facilitate tasks like migrations, seeding, etc.
 
 
-#PT
+# PT
 
 Funcionalidades adicionais que podem ser adicionadas ao ORM para torná-lo mais robusto e completo:
 
