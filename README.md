@@ -1,6 +1,4 @@
-### `README.md`
 
-```markdown
 # SpiderWeb ORM
 
 SpiderWeb ORM é um framework ORM (Object-Relational Mapping) leve e flexível para Python. Ele permite que você defina e manipule modelos de dados de maneira intuitiva e com validação robusta.
