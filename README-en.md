@@ -107,4 +107,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Simão Domingos De Oliveira António
 - Email: simaodomingos413@gmail.com
 - Phone: +244 925845239
-```
