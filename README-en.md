@@ -103,7 +103,5 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
-
-Simão Domingos De Oliveira António
-- Email: simaodomingos413@gmail.com
-- Phone: +244 925845239
+- Email: devemail413@gmail.com 
+- Whatsapp: +244 925845239
