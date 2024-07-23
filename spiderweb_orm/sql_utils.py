@@ -2,7 +2,7 @@
 
 """
 from spiderweb_orm.fields import *
-
+from datetime import date,datetime
 
 class SQLTypeGenerator:
     
@@ -51,7 +51,7 @@ class TableSQL:
 
             fields_definitions.append(field_def)
         fields_sql = ",".join(fields_definitions)
-        return f"CREATE TABLE IF NOT EXISTS {cls.__name__.lower()} ({fields_sql});"
+        return f"CREATE TABLE IF NOT EXISTS {cls.__class__.__name__.lower()} ({fields_sql});"
     
     @staticmethod
     def insert_data_sql(cls):
@@ -83,3 +83,19 @@ class TableSQL:
         placeholders = ",".join(["?" for _ in fields])
         columns = ",".join(fields)        
         return  f"INSERT INTO {cls.__class__.__name__.lower()} ({columns}) VALUES ({placeholders});",values
+
+    @staticmethod
+    def filter_data_sql(cls,kwargs):        
+        query =  f"SELECT * FROM {cls.__class__.__name__.lower()} WHERE " + "AND ".join([f"{key} = ?" for key in kwargs.keys()])
+        values = list(kwargs.values())        
+        return query,values
+    
+    @staticmethod
+    def select_all_sql(cls):
+        return f"SELECT * FROM {cls.__class__.__name__.lower()};"
+    
+    @staticmethod
+    def delete_data_sql(cls,id):
+        param = str(id)
+        query = f"DELETE FROM {cls.__class__.__name__.lower()} WHERE id = ? ;"
+        return query,param

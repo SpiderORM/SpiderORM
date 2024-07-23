@@ -17,14 +17,53 @@ class Model(metaclass=ModelMeta):
                 setattr(self,key,self._fields[key].validate(value))
             else:
                 raise AttributeError(f"{key} is not a valid field for {self.__class__.__name__}")
-
-    @staticmethod
-    def create_table(cls):
-        sql = TableSQL.create_table_sql(cls)        
+       
+    def create_table(self):
+        sql = TableSQL.create_table_sql(self)        
         with SQLIteConnection() as conn:
             conn.execute(sql)
-                
+            print('Table created successfully.')
+    
+    
+    def filter(self,**kwargs):        
+        query,values = TableSQL.filter_data_sql(self,kwargs)
+        with SQLIteConnection() as conn:
+            conn.execute(query,values)
+            data = [(dict(zip([column[0] for column in conn.description], row ))) for row in conn.fetchall()]                
+            return data
+    
+    def get(self,**kwargs):  
+        """
+            This method retrieve a specific data in the database.
+
+            For best use, is preferable to search for data using field with unique values in the database or primary key.
+        """       
+        query,values = TableSQL.filter_data_sql(self,kwargs)
+        with SQLIteConnection() as conn:
+            conn.execute(query,values)
+            data = [(dict(zip([column[0] for column in conn.description], row ))) for row in conn.fetchall()]
+        if len(data) == 1:
+            return data[0]
+        elif len(data) == 0:
+            raise ValueError("No matching record found.")
+        else:
+            raise ValueError("Multiple matching record found.")
+
+    def all(self):
+        query = TableSQL.select_all_sql(self)
+        with SQLIteConnection() as conn:
+            conn.execute(query)
+            data = conn.fetchall()
+        return data
+
     def save(self):
         sql,values = TableSQL.insert_data_sql(self)        
         with SQLIteConnection() as conn:
             conn.execute(sql,values)
+            print("Data recorded successfully.")
+
+    def delete(self,id):
+        query,param = TableSQL.delete_data_sql(self,id)
+        with SQLIteConnection() as conn:            
+            conn.execute(query,param)
+            print('Data deleted successfully')

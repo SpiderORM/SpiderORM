@@ -22,7 +22,7 @@ class Product(models.Model):
     manual = fields.FileField(allowed_types=['pdf','msword'])
     product_url = fields.URLField()
 
-Product().create_table(Product)
+# Product().create_table()
 
 
 try:
@@ -32,12 +32,19 @@ try:
         discount=10.5,              
         in_stock = True,       
         category = 'Electronics',
-        image = 'laptop3.png',
-        manual = 'manual5.pdf',
-        product_url = 'https://example.com/product/laptop6'       
+        image = 'laptop.png',
+        manual = 'manual.pdf',
+        product_url = 'https://example.com/product/laptop'       
     )
     
-    product.save()
-    print('Product saved successfully.')
+    # product.save()
+    # print('Product saved successfully.')
 except ValidationError as e:
     print(f"Validation error. {e}")
+
+Product().delete(id=1)
+products = Product().all()
+laptop = Product().filter(name='Laptop')
+product = Product().get(id=2)
+
+print(products,laptop,product,sep='\n')
