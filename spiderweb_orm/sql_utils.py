@@ -44,7 +44,7 @@ class TableSQL:
                 field_def += ' AUTOINCREMENT'
             if not field.null:
                 field_def += ' NOT NULL'
-            if field.unique:
+            if field.unique:                
                 field_def += ' UNIQUE'
             if field.default:
                 field_def += f" DEFAULT {repr(field.default)}"
@@ -58,18 +58,26 @@ class TableSQL:
         value = None  
         fields = []                
         values = []
-        for field, field_class in cls._fields.items():                            
+        for field, field_class in cls._fields.items():   
+                                
             if hasattr(field_class,'auto_increment'): 
                 if not field_class.auto_increment:
                     fields.append(field)     
-                    value = getattr(cls,field)                     
+                    value = field_class.validate(getattr(cls,field))
             else:
                 fields.append(field)
-                value = getattr(cls,field)                  
-            if field_class.default is not None and value == field_class:
-                value = field_class.default
+                value = getattr(cls,field)
+
+            if field_class.default is not None:                                             
+                if value == field_class:                     
+                    value = field_class.validate(value.default)
+                else:                    
+                    value = field_class.validate(value)
             
-            if value:
+            if isinstance(field_class,(DateField,DateTimeField)) and field_class.auto_now:
+                value = field_class.validate(date.today()) if isinstance(field_class,DateField) else field_class.validate(datetime.now())
+            
+            if value is not None:
                 values.append(value)                    
                  
         placeholders = ",".join(["?" for _ in fields])

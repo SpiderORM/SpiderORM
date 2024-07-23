@@ -1,6 +1,5 @@
 from spiderweb_orm.fields import Field
 from spiderweb_orm.sql_utils import TableSQL
-from spiderweb_orm.validators.exceptions import ValidationError
 from spiderweb_orm.sqlite3.sqlite_connection import SQLIteConnection
 
 class ModelMeta(type):
@@ -18,7 +17,7 @@ class Model(metaclass=ModelMeta):
                 setattr(self,key,self._fields[key].validate(value))
             else:
                 raise AttributeError(f"{key} is not a valid field for {self.__class__.__name__}")
-        
+
     @staticmethod
     def create_table(cls):
         sql = TableSQL.create_table_sql(cls)        
@@ -27,5 +26,5 @@ class Model(metaclass=ModelMeta):
                 
     def save(self):
         sql,values = TableSQL.insert_data_sql(self)        
-        with SQLIteConnection() as conn:            
+        with SQLIteConnection() as conn:
             conn.execute(sql,values)

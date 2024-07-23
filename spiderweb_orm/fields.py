@@ -2,15 +2,18 @@
 
     This module handle the diferents fields type.
 
+
+
 """
+
+
 from spiderweb_orm.validators.fields import (
     validate_boolean,validate_choices,
     validate_date,validate_datetime,
     validate_decimal,validate_default,
     validate_file_type,validate_float,
     validate_integer,validate_null,
-    validate_required,validate_string,
-    validate_url
+    validate_string,validate_url
 )
 
 
@@ -25,7 +28,7 @@ class Field:
         if self.null:
             validate_null(value)
         if self.default:
-            validate_default(value)
+            validate_default(value,self.default)
         return value
 
 class CharField(Field):
@@ -58,17 +61,17 @@ class DecimalField(Field):
         return value
 
 class FloatField(Field):
-    def __init__(self, unique=False,primary_key=False, null=True, default=None):
-         super().__init__(unique,primary_key, null, default)
+    def __init__(self, primary_key=False, null=True, unique=False, default=None):
+        super().__init__(primary_key, null, unique, default)
 
-    def validate(self, value):
+    def validate(self, value):        
         value = super().validate(value)
         validate_float(value)
         return value
 
 class BooleanField(Field):
-    def __init__(self, unique=False,primary_key=False, null=True, default=None):
-        super().__init__(unique,primary_key, null, default)
+    def __init__(self, primary_key=False, null=True, unique=False, default=None):
+        super().__init__(primary_key, null, unique, default)
 
     def validate(self, value):
         value =  super().validate(value)
@@ -76,17 +79,19 @@ class BooleanField(Field):
         return value
 
 class DateField(Field):
-    def __init__(self, unique=False,primary_key=False, null=True, default=None):
-        super().__init__(unique,primary_key, null, default)
+    def __init__(self, primary_key=False, null=True, unique=False, default=None,auto_now=False):
+        super().__init__(primary_key, null, unique, default)
+        self.auto_now = auto_now
 
-    def validate(self, value):
+    def validate(self, value):        
         value =  super().validate(value)
         validate_date(value)
         return value
-
+                
 class DateTimeField(Field):
-    def __init__(self, unique=False,primary_key=False, null=True, default=None):
-        super().__init__(unique,primary_key, null, default)
+    def __init__(self, primary_key=False, null=True, unique=False, default=None,auto_now =False):
+        super().__init__(primary_key, null, unique, default)
+        self.auto_now = auto_now
 
     def validate(self, value):
         value = super().validate(value)
@@ -94,7 +99,7 @@ class DateTimeField(Field):
         return value
 
 class ChoiceField(CharField):    
-    def __init__(self, choices, primary_key=False, null=True, unique=False, default=None):
+    def __init__(self,primary_key=False, null=True, unique=False, default=None,choices=None):
         super().__init__(max_length=max(len(choice) for choice in choices), primary_key=primary_key, null=null, unique=unique, default=default)
         self.choices = choices
     
