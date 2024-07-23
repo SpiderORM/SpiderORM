@@ -157,3 +157,25 @@ class TextField(CharField):
         value =  super().validate(value)
         validate_string(value,self.max_length)
         return value
+
+class PasswordField(CharField):
+    def __init__(self, max_length=32, primary_key=False, null=True, unique=False, default=None):
+        super().__init__(max_length, primary_key, null, unique, default)
+
+    def validate(self, value):
+        value = Field().validate(value)
+        validate_string(value,self.max_length)
+        return value
+
+    # Implement the encript data
+
+class EmailField(CharField):
+    def __init__(self, max_length, primary_key=False, null=True, unique=False, default=None):
+        super().__init__(max_length, primary_key, null, unique, default)
+
+    def validate(self, value):
+        value = Field().validate(value)
+        validate_string(value,self.max_length)
+        return value
+
+    # Implement the email validation

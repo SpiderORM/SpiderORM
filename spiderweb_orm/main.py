@@ -4,47 +4,54 @@ import sys
 path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(path)
 
-from spiderweb_orm import fields,models
+
+from spiderweb_orm import fields, models
 from spiderweb_orm.validators.exceptions import ValidationError
 
+
+# create your models here
+
+class User(models.Model):
+    id = fields.IntegerField(primary_key=True,auto_increment=True)
+    name = fields.CharField(max_length=120,null=False)
+    email = fields.CharField(max_length=255,null=False)
+    password = fields.PasswordField(max_length=128,null=False)
+    joined_on = fields.DateTimeField(auto_now=True)
+    image = fields.ImageField()
+    is_active = fields.BooleanField(default=True)
 
 
 class Product(models.Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
-    name = fields.CharField(max_length=100,null=False)
+    name = fields.CharField(max_length=120)
     price = fields.DecimalField()
-    discount = fields.FloatField(default=0.2)
-    in_stock = fields.BooleanField()
+    discount = fields.FloatField(default=5.2)
     manufacture_date = fields.DateField(auto_now=True)
     added_on = fields.DateTimeField(auto_now=True)
-    category = fields.ChoiceField(choices=['Electronics','Clothing','Food'])
     image = fields.ImageField()
-    manual = fields.FileField(allowed_types=['pdf','msword'])
-    product_url = fields.URLField()
+    in_stock = fields.BooleanField()
 
-# Product().create_table()
-
+User().create_table()
+Product().create_table()
 
 try:
-    product = Product(        
-        name='Laptop',
-        price = 999.9,
-        discount=10.5,              
-        in_stock = True,       
-        category = 'Electronics',
-        image = 'laptop.png',
-        manual = 'manual.pdf',
-        product_url = 'https://example.com/product/laptop'       
+    user_1 = User(
+        name = 'Mr. Aguinaldo',
+        email = 'mraguinaldo@gmail.com',
+        password = 'password413',
+        image = 'img1.png',
+        )
+
+    user_1.save()    
+
+    product_1 = Product(
+        name = 'Laptop425',
+        price = 1230.52,
+        image = 'laptop2.png',
+        in_stock = True
     )
-    
-    # product.save()
-    # print('Product saved successfully.')
+
+    product_1.save()
+
 except ValidationError as e:
-    print(f"Validation error. {e}")
-
-Product().delete(id=1)
-products = Product().all()
-laptop = Product().filter(name='Laptop')
-product = Product().get(id=2)
-
-print(products,laptop,product,sep='\n')
+    raise ("Validation error:",e)

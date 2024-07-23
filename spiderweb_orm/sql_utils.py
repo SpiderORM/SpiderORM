@@ -3,6 +3,7 @@
 """
 from spiderweb_orm.fields import *
 from datetime import date,datetime
+from hashlib import sha256
 
 class SQLTypeGenerator:
     
@@ -22,6 +23,8 @@ class SQLTypeGenerator:
             'URLField':lambda field:f"VARCHAR(255)",
             'ForeignKey':lambda field:f"INTEGER REFERENCES {field.to.__name__.lower()}(id)",
             'TextField':lambda field:f"TEXT",
+            'EmailField':lambda field:f"VARCHAR({field.max_length})",
+            'PasswordField':lambda field:f"VARCHAR({field.max_length})",
         }
 
         field_class_name = field.__class__.__name__
@@ -76,7 +79,9 @@ class TableSQL:
             
             if isinstance(field_class,(DateField,DateTimeField)) and field_class.auto_now:
                 value = field_class.validate(date.today()) if isinstance(field_class,DateField) else field_class.validate(datetime.now())
-            
+            if isinstance(field_class,(PasswordField)):
+                _hash = sha256(field_class.validate(value).encode())
+                value = _hash.hexdigest()
             if value is not None:
                 values.append(value)                    
                  
