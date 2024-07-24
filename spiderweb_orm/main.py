@@ -65,12 +65,27 @@ try:
         in_stock = True
     )
 
+    import datetime
+    product_4 = Product(
+        name = 'DesktopLenovo',
+        price = 5220.52,
+        manufacture_date=datetime.date(2024,5,3),
+        image = 'laptop55r.png',
+        in_stock = True
+    )
+
     # product_1.save()
     # product_2.save()
     # product_3.save()
+    # product_4.save()
 
 except ValidationError as e:
     raise e
 
 
-products = Product().filter(price__gt=1000,discount__lt=10)
+# products = Product().filter(price__gt=1000,discount__lt=10)
+
+# products = Product().filter(price__gte=5000)
+
+products = Product().filter(price__bt=(1000,6000),manufacture_date__lte='2024-05-03')
+print(products)

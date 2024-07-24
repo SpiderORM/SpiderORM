@@ -77,9 +77,11 @@ class TableSQL:
                 else:                    
                     value = field_class.validate(value)
             
-            if isinstance(field_class,(DateField,DateTimeField)) and field_class.auto_now:
-                value = field_class.validate(date.today()) if isinstance(field_class,DateField) else field_class.validate(datetime.now())
-            
+            if isinstance(field_class,(DateField,DateTimeField)):
+                if field_class.auto_now and not value or value == field_class:  
+                    value = field_class.validate(date.today()) if isinstance(field_class,DateField) else field_class.validate(datetime.now())
+                else:
+                    value = field_class.validate(value)
             if isinstance(field_class,(PasswordField)):
                 _hash = sha256(field_class.validate(value).encode())
                 value = _hash.hexdigest()
@@ -93,9 +95,12 @@ class TableSQL:
 
     @staticmethod
     def filter_data_sql(cls,kwargs):
-        kwargs__lt:dict = {}
-        kwargs__gt:dict = {}
-        kwargs__eq:dict = {}
+        kwargs__lt:dict = {} # less than 
+        kwargs__lte:dict = {} # less than or equal to
+        kwargs__gt:dict = {} # great than 
+        kwargs__gte:dict = {} # great than or equal to
+        kwargs__eq:dict = {} # equal to
+        kwargs__bt:dict = {} # between
         params:list = []
         values:list = []
 
@@ -104,6 +109,12 @@ class TableSQL:
                 kwargs__lt[key] = value            
             elif key.endswith('__gt'):
                 kwargs__gt[key] = value
+            elif key.endswith('__lte'):
+                kwargs__lte[key] = value
+            elif key.endswith('__gte'):
+                kwargs__gte[key] = value
+            elif key.endswith('__bt'):
+                kwargs__bt[key] = value
             else:
                 kwargs__eq[key] = value
 
@@ -119,11 +130,27 @@ class TableSQL:
                 params.append(lt_param)           
             for value in kwargs__lt.values():               
                values.append(value)
+        if kwargs__lte: 
+            for lte_param in [f"{key.removesuffix('__lte')} <= ? " for key in kwargs__lte.keys()]:
+                params.append(lte_param)           
+            for value in kwargs__lte.values():               
+               values.append(value)
         if kwargs__gt:             
             for gt_params in [f"{key.removesuffix('__gt')} > ? " for key in kwargs__gt.keys()]:
                 params.append(gt_params)                      
             for value in kwargs__gt.values():
                values.append(value)
+        if kwargs__gte:             
+            for gte_params in [f"{key.removesuffix('__gte')} >= ? " for key in kwargs__gte.keys()]:
+                params.append(gte_params)                      
+            for value in kwargs__gte.values():
+               values.append(value)
+        if kwargs__bt:
+            for bt_params in [f"{key.removesuffix('__bt')} BETWEEN ? AND ? " for key in kwargs__bt.keys()]:
+                params.append(bt_params)
+            for value in kwargs__bt.values():
+                values.append(value[0])
+                values.append(value[1])
         
         query += 'AND '.join(params)
 
