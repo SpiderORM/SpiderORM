@@ -42,7 +42,7 @@ try:
         image = 'img12.png',
         )
 
-    user_1.save()    
+    # user_1.save()    
 
     product_1 = Product(
         name = 'Laptop425',
@@ -50,8 +50,27 @@ try:
         image = 'laptop2.png',
         in_stock = True
     )
+    
+    product_2 = Product(
+        name = 'Laptop5',
+        price = 150.52,
+        image = 'laptop3.png',
+        in_stock = True
+    )
+
+    product_3 = Product(
+        name = 'DesktopLenovo',
+        price = 5220.52,
+        image = 'laptop35.png',
+        in_stock = True
+    )
 
     # product_1.save()
+    # product_2.save()
+    # product_3.save()
 
 except ValidationError as e:
     raise e
+
+
+products = Product().filter(price__gt=1000,discount__lt=10)

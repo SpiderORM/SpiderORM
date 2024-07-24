@@ -26,7 +26,7 @@ class Model(metaclass=ModelMeta):
     
     
     def filter(self,**kwargs):        
-        query,values = TableSQL.filter_data_sql(self,kwargs)
+        query,values = TableSQL.filter_data_sql(self,kwargs)        
         with SQLIteConnection() as conn:
             conn.execute(query,values)
             data = [(dict(zip([column[0] for column in conn.description], row ))) for row in conn.fetchall()]                

@@ -92,9 +92,41 @@ class TableSQL:
         return  f"INSERT INTO {cls.__class__.__name__.lower()} ({columns}) VALUES ({placeholders});",values
 
     @staticmethod
-    def filter_data_sql(cls,kwargs):        
-        query =  f"SELECT * FROM {cls.__class__.__name__.lower()} WHERE " + "AND ".join([f"{key} = ?" for key in kwargs.keys()])
-        values = list(kwargs.values())        
+    def filter_data_sql(cls,kwargs):
+        kwargs__lt:dict = {}
+        kwargs__gt:dict = {}
+        kwargs__eq:dict = {}
+        params:list = []
+        values:list = []
+
+        for key, value in kwargs.items():                                   
+            if key.endswith('__lt'):               
+                kwargs__lt[key] = value            
+            elif key.endswith('__gt'):
+                kwargs__gt[key] = value
+            else:
+                kwargs__eq[key] = value
+
+        query =  f"SELECT * FROM {cls.__class__.__name__.lower()} WHERE "         
+        
+        if kwargs__eq:
+            for eq_param in [f"{key} = ? " for key in kwargs__eq.keys()]:
+                params.append(eq_param)
+            for value in kwargs__eq.values():
+                values.append(value)
+        if kwargs__lt: 
+            for lt_param in [f"{key.removesuffix('__lt')} < ? " for key in kwargs__lt.keys()]:
+                params.append(lt_param)           
+            for value in kwargs__lt.values():               
+               values.append(value)
+        if kwargs__gt:             
+            for gt_params in [f"{key.removesuffix('__gt')} > ? " for key in kwargs__gt.keys()]:
+                params.append(gt_params)                      
+            for value in kwargs__gt.values():
+               values.append(value)
+        
+        query += 'AND '.join(params)
+
         return query,values
     
     @staticmethod
