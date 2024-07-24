@@ -79,9 +79,11 @@ class TableSQL:
             
             if isinstance(field_class,(DateField,DateTimeField)) and field_class.auto_now:
                 value = field_class.validate(date.today()) if isinstance(field_class,DateField) else field_class.validate(datetime.now())
+            
             if isinstance(field_class,(PasswordField)):
                 _hash = sha256(field_class.validate(value).encode())
                 value = _hash.hexdigest()
+            
             if value is not None:
                 values.append(value)                    
                  
