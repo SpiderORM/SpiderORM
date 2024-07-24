@@ -66,7 +66,18 @@ print(user)
 Para usar filtros avançados como lt (menor que), gt (maior que), lte (menor ou igual a), gte (maior ou igual a), e bt (entre):
 
 ```python
-users = User().filter(age__gt=20, age__lt=40)
+users = User().filter(age__gt=20)
+print(users)
+```
+
+```python
+users = User().filter(age__lte=50)
+print(users)
+```
+
+
+```python
+users = User().filter(age__bt=(20,50))
 print(users)
 ```
 
