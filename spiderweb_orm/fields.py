@@ -2,8 +2,6 @@
 
     This module handle the diferents fields type.
 
-
-
 """
 
 
@@ -13,7 +11,8 @@ from spiderweb_orm.validators.fields import (
     validate_decimal,validate_default,
     validate_file_type,validate_float,
     validate_integer,validate_null,
-    validate_string,validate_url
+    validate_string,validate_url,
+    validate_email
 )
 
 
@@ -166,16 +165,13 @@ class PasswordField(CharField):
         value = Field().validate(value)
         validate_string(value,self.max_length)
         return value
-
-    # Implement the encript data
-
+    
 class EmailField(CharField):
     def __init__(self, max_length, primary_key=False, null=True, unique=False, default=None):
         super().__init__(max_length, primary_key, null, unique, default)
 
     def validate(self, value):
-        value = Field().validate(value)
+        value = Field().validate(value)        
         validate_string(value,self.max_length)
+        validate_email(value)
         return value
-
-    # Implement the email validation
