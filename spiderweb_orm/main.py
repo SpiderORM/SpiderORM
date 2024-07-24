@@ -14,7 +14,7 @@ from spiderweb_orm.validators.exceptions import ValidationError
 class User(models.Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
     name = fields.CharField(max_length=120,null=False)
-    email = fields.CharField(max_length=255,null=False)
+    email = fields.EmailField(max_length=255,null=False)
     password = fields.PasswordField(max_length=128,null=False)
     joined_on = fields.DateTimeField(auto_now=True)
     image = fields.ImageField()
@@ -31,15 +31,15 @@ class Product(models.Model):
     image = fields.ImageField()
     in_stock = fields.BooleanField()
 
-User().create_table()
-Product().create_table()
+# User().create_table()
+# Product().create_table()
 
 try:
     user_1 = User(
         name = 'Mr. Aguinaldo',
         email = 'mraguinaldo@gmail.com',
         password = 'password413',
-        image = 'img1.png',
+        image = 'img12.png',
         )
 
     user_1.save()    
@@ -51,7 +51,7 @@ try:
         in_stock = True
     )
 
-    product_1.save()
+    # product_1.save()
 
 except ValidationError as e:
-    raise ("Validation error:",e)
+    raise e
