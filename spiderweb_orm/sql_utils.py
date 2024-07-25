@@ -93,8 +93,6 @@ class TableSQL:
             if isinstance(field_class,(PasswordField)):
                 _hash = sha256(field_class.validate(value).encode())
                 value = _hash.hexdigest()
-            if isinstance(field_class,DecimalField):
-                value =  f"{field_class.validate(value):.2f}"
             
             if value is not None:
                 values.append(value)                    
