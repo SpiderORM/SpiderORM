@@ -27,8 +27,7 @@ def validate_float(value):
     if not isinstance(value,float):
         raise ValidationError(f"Value must be a float: {value}.")
 
-def validate_decimal(value):  
-    
+def validate_decimal(value):      
     if not isinstance(value, str):
         value = Decimal(value)
     if not isinstance(value,Decimal):
@@ -57,8 +56,7 @@ def validate_choices(value,choices):
 def validate_url(value):
     value = verify_url_pattern(value)
     if not value:
-        raise ValidationError(f"Value must be a url.")
-   
+        raise ValidationError(f"Value must be a url.")   
     
 def validate_file_type(value,allowed_types):
     if not any(value.endswith(allowed_type) for allowed_type in allowed_types):
@@ -70,5 +68,4 @@ def validate_default(value,default):
 def validate_email(value):
     value = verify_email_pattern(value)
     if not value:
-        raise ValidationError(f"Value don't match with the email pattern.")
-    
+        raise ValidationError(f"Value don't match with the email pattern.")    

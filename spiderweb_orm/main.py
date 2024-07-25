@@ -14,6 +14,7 @@ sys.path.append(path)
 
 from spiderweb_orm import fields, models
 from spiderweb_orm.validators.exceptions import ValidationError
+from spiderweb_orm.sanitizers import sanitize_string,sanitize_image,sanitize_boolean,sanitize_time,sanitize_decimal
 
 
 # create your models here
@@ -48,7 +49,7 @@ class Runner(models.Model):
 # Runner().create_table()
 
 # User().create_table()
-Product().create_table()
+# Product().create_table()
 
 try:
     # user_1 = User(
@@ -60,19 +61,19 @@ try:
 
     # user_1.save()    
 
-    product_1 = Product(
-        name = 'Laptop425',
-        price = 1230.52,
-        image = 'laptop2.png',
-        in_stock = True
-    )
-    
-    # product_2 = Product(
-    #     name = 'Laptop5',
-    #     price = 150.52,
-    #     image = 'laptop3.png',
+    # product_1 = Product(
+    #     name = 'Laptop425',
+    #     price = 1230.52,
+    #     image = 'laptop2.png',
     #     in_stock = True
     # )
+    
+    product_2 = Product(
+        name = sanitize_string('Laptop5'),
+        price = sanitize_decimal(150.52),
+        image = sanitize_image('laptop3.png'),
+        in_stock = sanitize_boolean('true')
+    )
 
     # product_3 = Product(
     #     name = 'DesktopLenovo',
@@ -91,17 +92,16 @@ try:
     # )
 
     # product_1.save()
-    # product_2.save()
+    product_2.save()
     # product_3.save()
     # product_4.save()
-
-    from datetime import time
+    
     runner_1 = Runner(
-        name='John Speed',
-        email='john@gmail.com',        
-        arrive_time= time(0,5,6,3))
+        name=sanitize_string('John Speed'),
+        email=sanitize_string('john@gmail.com'),        
+        arrive_time= sanitize_time('00:03:52'))
 
-    # runner_1.save()
+    runner_1.save()
 
 except ValidationError as e:
     raise e

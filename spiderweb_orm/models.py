@@ -57,9 +57,9 @@ class Model(metaclass=ModelMeta):
         return data
 
     def save(self):
-        sql,values = TableSQL.insert_data_sql(self)        
+        query,values = TableSQL.insert_data_sql(self)         
         with SQLIteConnection() as conn:
-            conn.execute(sql,values)
+            conn.execute(query,values)
             print("Data recorded successfully.")
 
     def delete(self,id):
