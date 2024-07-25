@@ -5,7 +5,7 @@
 """
 
 
-from spiderweb_orm.validators.fields import (
+from spiderweb_orm.validators.fields_validations import (
     validate_boolean,validate_choices,
     validate_date,validate_datetime,
     validate_decimal,validate_default,
