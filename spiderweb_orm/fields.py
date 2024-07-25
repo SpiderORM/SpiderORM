@@ -12,7 +12,7 @@ from spiderweb_orm.validators.fields_validations import (
     validate_file_type,validate_float,
     validate_integer,validate_null,
     validate_string,validate_url,
-    validate_email
+    validate_email,validate_time
 )
 
 
@@ -95,6 +95,16 @@ class DateTimeField(Field):
     def validate(self, value):
         value = super().validate(value)
         validate_datetime(value)
+        return value
+
+class TimeField(Field):
+    def __init__(self, primary_key=False, null=True, unique=False, default=None,auto_now=False):
+        super().__init__(primary_key, null, unique, default)
+        self.auto_now = auto_now
+
+    def validate(self, value):
+        value = super().validate(value)
+        validate_time(value)
         return value
 
 class ChoiceField(CharField):    

@@ -38,16 +38,25 @@ class Product(models.Model):
     image = fields.ImageField()
     in_stock = fields.BooleanField()
 
+class Runner(models.Model):
+    id = fields.IntegerField(primary_key=True,auto_increment=True)
+    name = fields.CharField(max_length=120,null=False)
+    email = fields.EmailField(max_length=255,null=False)
+    arrive_time = fields.TimeField()
+    
+
+# Runner().create_table()
+
 # User().create_table()
-# Product().create_table()
+Product().create_table()
 
 try:
-    user_1 = User(
-        name = 'Mr. Aguinaldo',
-        email = 'mraguinaldo@gmail.com',
-        password = 'password413',
-        image = 'img12.png',
-        )
+    # user_1 = User(
+    #     name = 'Mr. Aguinaldo',
+    #     email = 'mraguinaldo@gmail.com',
+    #     password = 'password413',
+    #     image = 'img12.png',
+    #     )
 
     # user_1.save()    
 
@@ -58,33 +67,41 @@ try:
         in_stock = True
     )
     
-    product_2 = Product(
-        name = 'Laptop5',
-        price = 150.52,
-        image = 'laptop3.png',
-        in_stock = True
-    )
+    # product_2 = Product(
+    #     name = 'Laptop5',
+    #     price = 150.52,
+    #     image = 'laptop3.png',
+    #     in_stock = True
+    # )
 
-    product_3 = Product(
-        name = 'DesktopLenovo',
-        price = 5220.52,
-        image = 'laptop35.png',
-        in_stock = True
-    )
+    # product_3 = Product(
+    #     name = 'DesktopLenovo',
+    #     price = 5220.52,
+    #     image = 'laptop35.png',
+    #     in_stock = True
+    # )
 
-    import datetime
-    product_4 = Product(
-        name = 'DesktopLenovo',
-        price = 5220.52,
-        manufacture_date=datetime.date(2024,5,3),
-        image = 'laptop55r.png',
-        in_stock = True
-    )
+    # import datetime
+    # product_4 = Product(
+    #     name = 'DesktopLenovo',
+    #     price = 5220.52,
+    #     manufacture_date=datetime.date(2024,5,3),
+    #     image = 'laptop55r.png',
+    #     in_stock = True
+    # )
 
     # product_1.save()
     # product_2.save()
     # product_3.save()
     # product_4.save()
+
+    from datetime import time
+    runner_1 = Runner(
+        name='John Speed',
+        email='john@gmail.com',        
+        arrive_time= time(0,5,6,3))
+
+    # runner_1.save()
 
 except ValidationError as e:
     raise e
@@ -94,5 +111,8 @@ except ValidationError as e:
 
 # products = Product().filter(price__gte=5000)
 
-products = Product().filter(price__bt=(1000,6000),manufacture_date__lte='2024-05-03')
-print(products)
+# products = Product().filter(price__bt=(1000,6000),manufacture_date__lte='2024-05-03')
+# print(products)
+
+runners = Runner().filter(name='John Speed')
+print(runners)

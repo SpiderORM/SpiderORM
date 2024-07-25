@@ -1,5 +1,5 @@
 from decimal import Decimal
-from datetime import date,datetime
+from datetime import date,datetime,time
 
 from spiderweb_orm.validators.exceptions import ValidationError
 from spiderweb_orm.validators._re import verify_email_pattern,verify_url_pattern
@@ -32,8 +32,7 @@ def validate_decimal(value):
     if not isinstance(value, str):
         value = Decimal(value)
     if not isinstance(value,Decimal):
-        raise ValidationError(f"Value must be a decimal.")
-       
+        raise ValidationError(f"Value must be a decimal.")       
             
 def validate_boolean(value):
     if not isinstance(value,bool):
@@ -46,6 +45,10 @@ def validate_date(value):
 def validate_datetime(value):
     if not isinstance(value,datetime):
         raise ValidationError(f"Value must be a datetime: {value}.")
+
+def validate_time(value):
+    if not isinstance(value,time):
+        raise ValidationError(f"Value must be a time: {value}.")
 
 def validate_choices(value,choices):
     if value not in choices:
