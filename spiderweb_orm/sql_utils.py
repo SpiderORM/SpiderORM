@@ -12,7 +12,7 @@ class SQLTypeGenerator:
         field_type_map = {
             'CharField':lambda field: f"VARCHAR({field.max_length})",
             'IntegerField':lambda field:f"INTEGER",
-            'DecimalField':lambda field:f"DECIMAL",
+            'DecimalField':lambda field:f"DECIMAL{field.max_digits,field.decimal_places}",
             'FloatField':lambda field:f"FLOAT",
             'BooleanField':lambda field:f"BOOLEAN",
             'DateField':lambda field:f"DATE",
@@ -93,7 +93,8 @@ class TableSQL:
             if isinstance(field_class,(PasswordField)):
                 _hash = sha256(field_class.validate(value).encode())
                 value = _hash.hexdigest()
-            
+            if isinstance(field_class,DecimalField):
+                value =  f"{field_class.validate(value):.{field_class.decimal_places}f}"            
             if value is not None:
                 values.append(value)                    
                  

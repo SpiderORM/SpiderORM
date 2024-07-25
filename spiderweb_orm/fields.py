@@ -51,8 +51,10 @@ class IntegerField(Field):
         return value
     
 class DecimalField(Field):
-    def __init__(self, primary_key=False, null=True, unique=False, default=None):
+    def __init__(self, max_digits,decimal_places,primary_key=False, null=True, unique=False, default=None):
         super().__init__(primary_key, null, unique, default)
+        self.max_digits = max_digits
+        self.decimal_places = decimal_places
             
     def validate(self, value):
         value = super().validate(value)

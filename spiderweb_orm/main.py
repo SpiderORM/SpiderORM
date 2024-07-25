@@ -32,7 +32,7 @@ class User(models.Model):
 class Product(models.Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
     name = fields.CharField(max_length=120)
-    price = fields.DecimalField()
+    price = fields.DecimalField(max_digits=12,decimal_places=3)
     discount = fields.FloatField(default=5.2)
     manufacture_date = fields.DateField(auto_now=True)
     added_on = fields.DateTimeField(auto_now=True)
@@ -70,8 +70,8 @@ try:
     
     product_2 = Product(
         name = sanitize_string('Laptop5'),
-        price = sanitize_decimal(150.52),
-        image = sanitize_image('laptop3.png'),
+        price = sanitize_decimal(1500.522500),
+        image = sanitize_image('laptop635.png'),
         in_stock = sanitize_boolean('true')
     )
 
@@ -101,18 +101,18 @@ try:
         email=sanitize_string('john@gmail.com'),        
         arrive_time= sanitize_time('00:03:52'))
 
-    runner_1.save()
+    # runner_1.save()
 
 except ValidationError as e:
     raise e
 
 
-# products = Product().filter(price__gt=1000,discount__lt=10)
+products = Product().filter(price__gt=100,discount__lt=10)
 
 # products = Product().filter(price__gte=5000)
 
 # products = Product().filter(price__bt=(1000,6000),manufacture_date__lte='2024-05-03')
-# print(products)
+print(products)
 
-runners = Runner().filter(name='John Speed')
-print(runners)
+# runners = Runner().filter(name='John Speed')
+# print(runners)

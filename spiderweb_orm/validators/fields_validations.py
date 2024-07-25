@@ -28,8 +28,6 @@ def validate_float(value):
         raise ValidationError(f"Value must be a float: {value}.")
 
 def validate_decimal(value):      
-    if not isinstance(value, str):
-        value = Decimal(value)
     if not isinstance(value,Decimal):
         raise ValidationError(f"Value must be a decimal.")       
             
