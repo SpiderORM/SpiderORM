@@ -1,4 +1,3 @@
-
 # SpiderWeb ORM
 
 SpiderWeb ORM é uma biblioteca de mapeamento objeto-relacional (ORM) escrita em Python, desenvolvida para facilitar a interação entre Objetos Pyhon e um banco de dados relacional. Ele permite que você defina e manipule modelos de dados de maneira intuitiva e com validação robusta através de Objectos Python.
@@ -25,7 +24,7 @@ SpiderWeb ORM é uma biblioteca de mapeamento objeto-relacional (ORM) escrita em
 
 ## Instalação
 
-Clone o repositório para o seu ambiente local:
+Para instalar o SpiderWeb ORM, você pode clonar o repositório do GitHub:
 
 ```bash
 git clone https://github.com/yourusername/spiderweb-orm.git
@@ -41,9 +40,9 @@ pip install -r requirements.txt
 
 ## Exemplo de uso
 
-### Definição de Modelos
+### Definindo um Modelo
 
-Defina seus modelos de dados herdando da classe `Model` e especificando os campos desejados:
+Para definir um modelo, crie uma classe que herde de `Model` e adicione atributos de campo:
 
 ```python
 from spiderweb_orm import fields, models
@@ -162,13 +161,15 @@ Os campos são validados automaticamente antes de serem salvos no banco de dados
 
 ## Contribuição
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+Para contribuir com o SpiderWeb ORM, siga estas etapas:
 
-1. Faça um fork do projeto
-2. Crie um branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. Faça um push para o branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
+1. Faça um fork do repositório.
+2. Crie um branch para sua feature (`git checkout -b feature/nova-feature`).
+3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`).
+4. Faça um push para o branch (`git push origin feature/nova-feature`).
+5. Abra um Pull Request.
+
+---
 
 ## Licença
 
