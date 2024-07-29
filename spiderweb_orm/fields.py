@@ -187,3 +187,15 @@ class EmailField(CharField):
         validate_string(value,self.max_length)
         validate_email(value)
         return value
+
+
+class ManyToManyField(Field):
+    def __init__(self,to,related_name,null=True):        
+        super().__init__(null)
+        self.to = to
+        self.relate_name = related_name
+
+    def validate(self, value):
+        value =  super().validate(value)
+        validate_integer(value)
+        return value 
