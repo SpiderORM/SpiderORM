@@ -1,0 +1,2 @@
+class DatabaseCreateError(Exception):
+    pass
