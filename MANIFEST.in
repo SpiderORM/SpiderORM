@@ -1,0 +1,4 @@
+include README.md
+include README-en.md
+include LICENSE
+include spiderweb_orm/data/*
