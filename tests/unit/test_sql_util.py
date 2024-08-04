@@ -236,3 +236,22 @@ def test_sqlite_filter_data():
 
     assert query == expected_query
     assert values == expected_values   
+
+
+def test_select_all():
+    mysql_conn_instance = DummyModel()    
+    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='localhost',user='root',password='root')    
+
+    mysql_query = mysql_conn_instance.all()    
+    mysql_expected_query = 'SELECT * FROM dummymodel;'    
+
+    assert mysql_query == mysql_expected_query 
+
+def test_sqlite_select_all():
+    sqlite_conn_instance = DummyModel()
+    sqlite_conn_instance._meta['rdbms'] = SQLIteConnection()
+
+    sqlite_query = sqlite_conn_instance.all()
+    sqlite_expected_query = 'SELECT * FROM dummymodel;'
+    
+    assert sqlite_query == sqlite_expected_query   
