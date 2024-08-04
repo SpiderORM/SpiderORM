@@ -35,9 +35,11 @@ class Model(metaclass=ModelMeta):
                 raise AttributeError(f"{key} is not a valid field for {self.__class__.__name__}")
        
     def create_table(self):
-        sql = TableSQL.create_table_sql(self)        
+        sql,sql_safely_password_store = TableSQL.create_table_sql(self)
         with self._rdbms() as conn:
             conn.execute(sql)
+            if sql_safely_password_store:
+                conn.execute(sql_safely_password_store)
             print('Table created successfully.')
     
     
