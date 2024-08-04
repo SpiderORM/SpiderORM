@@ -25,7 +25,7 @@ class SQLTypeGenerator:
             'FileField':lambda field:f"VARCHAR(255)",
             'URLField':lambda field:f"VARCHAR(255)",
             'ForeignKey':lambda field:f"INTEGER REFERENCES {field.to.__name__.lower()}(id)",
-            'TextField':lambda field:f"TEXT",
+            'TextField':lambda field:f"TEXT({field.max_length})",
             'EmailField':lambda field:f"VARCHAR({field.max_length})",
             'PasswordField':lambda field:f"VARCHAR({field.max_length})",
             'TimeField':lambda field:f"TIME",
@@ -104,9 +104,12 @@ class TableSQL:
 
                 # TODO: Store the salt in database
 
-                salt = os.urandom(16)
-                _hash = pbkdf2_hmac(hash_name='sha256',password=field_class.validate(value).encode(),salt=salt,iterations=100000)
-                value = _hash.hex() 
+                # salt = os.urandom(16)
+                # _hash = pbkdf2_hmac(hash_name='sha256',password=field_class.validate(value).encode(),salt=salt,iterations=100000)
+                # value = _hash.hex() 
+                
+                _hash = sha256(field_class.validate(value).encode())
+                value = _hash.digest() 
                                
             if isinstance(field_class,DecimalField):
                 value =  f"{field_class.validate(value):.{field_class.decimal_places}f}"            
