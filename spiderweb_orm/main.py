@@ -15,7 +15,8 @@ sys.path.append(path)
 from spiderweb_orm import fields, models
 from spiderweb_orm.validators.exceptions import ValidationError
 from spiderweb_orm.sanitizers import sanitize_string,sanitize_image,sanitize_boolean,sanitize_time,sanitize_decimal
-
+from spiderweb_orm.mysql.connection import MysqlConnection
+from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
 
 # create your models here
 
@@ -28,6 +29,9 @@ class User(models.Model):
     image = fields.ImageField()
     is_active = fields.BooleanField(default=True)
 
+    class MetaData:
+        rdbms = MysqlConnection(host='localhost',user='root',password='root',database='mysql_db')
+
 
 class Product(models.Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
@@ -38,6 +42,11 @@ class Product(models.Model):
     added_on = fields.DateTimeField(auto_now=True)
     image = fields.ImageField()
     in_stock = fields.BooleanField()
+
+    class MetaData:
+        rdbms = SQLIteConnection()
+
+
 
 class Runner(models.Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
@@ -52,14 +61,14 @@ class Runner(models.Model):
 # Product().create_table()
 
 try:
-    # user_1 = User(
-    #     name = 'Mr. Aguinaldo',
-    #     email = 'mraguinaldo@gmail.com',
-    #     password = 'password413',
-    #     image = 'img12.png',
-    #     )
+    user_1 = User(
+        name = 'Mr. Aguinaldo',
+        email = 'mraguinaldo3@gmail.com',
+        password = 'password413',
+        image = 'img12.png',
+        )
 
-    # user_1.save()    
+    user_1.save()    
 
     # product_1 = Product(
     #     name = 'Laptop425',
@@ -91,28 +100,30 @@ try:
     #     in_stock = True
     # )
 
-    # product_1.save()
-    product_2.save()
+    # # product_1.save()
+    # product_2.save()
     # product_3.save()
     # product_4.save()
     
-    runner_1 = Runner(
-        name=sanitize_string('John Speed'),
-        email=sanitize_string('john@gmail.com'),        
-        arrive_time= sanitize_time('00:03:52'))
+    # runner_1 = Runner(
+    #     name=sanitize_string('John Speed'),
+    #     email=sanitize_string('john@gmail.com'),        
+    #     arrive_time= sanitize_time('00:03:52'))
 
     # runner_1.save()
 
 except ValidationError as e:
     raise e
 
+# user = User)
+# user.delete(id=1)
 
-products = Product().filter(price__gt=100,discount__lt=10)
+# products = Product().filter(price__gt=100,discount__lt=10)
 
-# products = Product().filter(price__gte=5000)
+# # products = Product().filter(price__gte=5000)
 
-# products = Product().filter(price__bt=(1000,6000),manufacture_date__lte='2024-05-03')
-print(products)
+# # products = Product().filter(price__bt=(1000,6000),manufacture_date__lte='2024-05-03')
+# print(products)
 
-# runners = Runner().filter(name='John Speed')
-# print(runners)
+# # runners = Runner().filter(name='John Speed')
+# # print(runners)
