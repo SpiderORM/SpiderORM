@@ -254,4 +254,27 @@ def test_sqlite_select_all():
     sqlite_query = sqlite_conn_instance.all()
     sqlite_expected_query = 'SELECT * FROM dummymodel;'
     
-    assert sqlite_query == sqlite_expected_query   
+    assert sqlite_query == sqlite_expected_query  
+
+
+def test_mysql_delete_data():
+    mysql_conn_instance = DummyModel()   
+    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='localhost',user='root',password='root')    
+
+    mysql_query,mysql_values = mysql_conn_instance.delete(id=1)    
+    mysql_expected_query = 'DELETE FROM dummymodel WHERE id = %s;'  
+
+    expected_value = '1'
+    assert mysql_query == mysql_expected_query   
+    assert mysql_values ==  expected_value   
+
+def test_sqlite_delete_data():
+    sqlite_conn_instance = DummyModel()
+    sqlite_conn_instance._meta['rdbms'] = SQLIteConnection()
+
+    sqlite_query,sqlite_values = sqlite_conn_instance.delete(id=1)
+    sqlite_expected_query = 'DELETE FROM dummymodel WHERE id = ?;'
+
+    expected_value = '1'
+    assert sqlite_query == sqlite_expected_query
+    assert sqlite_values ==  expected_value
