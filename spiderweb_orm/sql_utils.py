@@ -2,8 +2,11 @@
 
 """
 from spiderweb_orm.fields import *
-from datetime import date,datetime,time
-from hashlib import sha256
+from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
+from spiderweb_orm.mysql.connection import MysqlConnection
+from datetime import datetime
+from hashlib import sha256,pbkdf2_hmac
+import os
 
 class SQLTypeGenerator:
     
@@ -39,13 +42,17 @@ class TableSQL:
 
     @staticmethod
     def create_table_sql(cls):
+        rdbms = cls._meta.get('rdbms')
         fields_definitions = []
         for field_name, field in cls._fields.items():
             field_def = f"{field_name} {SQLTypeGenerator.get_sql_type(field)}"
             if field.primary_key:
                 field_def += ' PRIMARY KEY'
             if getattr(field,'auto_increment',False):
-                field_def += ' AUTOINCREMENT'
+                if isinstance(rdbms,SQLIteConnection):
+                    field_def += ' AUTOINCREMENT'
+                elif isinstance(rdbms,MysqlConnection):
+                    field_def += ' AUTO_INCREMENT'
             if not field.null:
                 field_def += ' NOT NULL'
             if field.unique:                
@@ -62,6 +69,9 @@ class TableSQL:
         value = None  
         fields = []                
         values = []
+        rdbms = cls._meta.get('rdbms')
+        _format_str = '%s' if isinstance(rdbms,MysqlConnection) else '?' 
+
         for field, field_class in cls._fields.items():   
                                 
             if hasattr(field_class,'auto_increment'): 
@@ -91,14 +101,19 @@ class TableSQL:
                 else:
                     value = field_class.validate(value).__str__()
             if isinstance(field_class,(PasswordField)):
-                _hash = sha256(field_class.validate(value).encode())
-                value = _hash.hexdigest()
+
+                # TODO: Store the salt in database
+
+                salt = os.urandom(16)
+                _hash = pbkdf2_hmac(hash_name='sha256',password=field_class.validate(value).encode(),salt=salt,iterations=100000)
+                value = _hash.hex() 
+                               
             if isinstance(field_class,DecimalField):
                 value =  f"{field_class.validate(value):.{field_class.decimal_places}f}"            
             if value is not None:
                 values.append(value)                    
                  
-        placeholders = ",".join(["?" for _ in fields])
+        placeholders = ",".join([f"{_format_str}" for _ in fields])
         columns = ",".join(fields)        
         return  f"INSERT INTO {cls.__class__.__name__.lower()} ({columns}) VALUES ({placeholders});",values
 
@@ -112,6 +127,7 @@ class TableSQL:
         kwargs__bt:dict = {} # between
         params:list = []
         values:list = []
+        _format_str = '%s' if isinstance(cls._meta.get('rdbms'),MysqlConnection) else '?'
 
         for key, value in kwargs.items():                                   
             if key.endswith('__lt'):               
@@ -130,32 +146,32 @@ class TableSQL:
         query =  f"SELECT * FROM {cls.__class__.__name__.lower()} WHERE "         
         
         if kwargs__eq:
-            for eq_param in [f"{key} = ? " for key in kwargs__eq.keys()]:
+            for eq_param in [f"{key} = {_format_str} " for key in kwargs__eq.keys()]:
                 params.append(eq_param)
             for value in kwargs__eq.values():
                 values.append(value)
         if kwargs__lt: 
-            for lt_param in [f"{key.removesuffix('__lt')} < ? " for key in kwargs__lt.keys()]:
+            for lt_param in [f"{key.removesuffix('__lt')} < {_format_str}" for key in kwargs__lt.keys()]:
                 params.append(lt_param)           
             for value in kwargs__lt.values():               
                values.append(value)
         if kwargs__lte: 
-            for lte_param in [f"{key.removesuffix('__lte')} <= ? " for key in kwargs__lte.keys()]:
+            for lte_param in [f"{key.removesuffix('__lte')} <= {_format_str}" for key in kwargs__lte.keys()]:
                 params.append(lte_param)           
             for value in kwargs__lte.values():               
                values.append(value)
         if kwargs__gt:             
-            for gt_params in [f"{key.removesuffix('__gt')} > ? " for key in kwargs__gt.keys()]:
+            for gt_params in [f"{key.removesuffix('__gt')} > {_format_str}" for key in kwargs__gt.keys()]:
                 params.append(gt_params)                      
             for value in kwargs__gt.values():
                values.append(value)
         if kwargs__gte:             
-            for gte_params in [f"{key.removesuffix('__gte')} >= ? " for key in kwargs__gte.keys()]:
+            for gte_params in [f"{key.removesuffix('__gte')} >= {_format_str}" for key in kwargs__gte.keys()]:
                 params.append(gte_params)                      
             for value in kwargs__gte.values():
                values.append(value)
         if kwargs__bt:
-            for bt_params in [f"{key.removesuffix('__bt')} BETWEEN ? AND ? " for key in kwargs__bt.keys()]:
+            for bt_params in [f"{key.removesuffix('__bt')} BETWEEN {_format_str} AND {_format_str}" for key in kwargs__bt.keys()]:
                 params.append(bt_params)
             for value in kwargs__bt.values():
                 values.append(value[0])
@@ -171,6 +187,7 @@ class TableSQL:
     
     @staticmethod
     def delete_data_sql(cls,id):
+        _format_str = '%s' if isinstance(cls._meta.get('rdbms'),MysqlConnection) else '?'
         param = str(id)
-        query = f"DELETE FROM {cls.__class__.__name__.lower()} WHERE id = ? ;"
+        query = f"DELETE FROM {cls.__class__.__name__.lower()} WHERE id = {_format_str};"
         return query,param
