@@ -32,7 +32,20 @@ class DummyModel(Model):
     def save(self):
         query,values =  TableSQL().insert_data_sql(self)
         return query,values
-   
+
+    def filter(self,**kwargs):
+        sql = TableSQL().filter_data_sql(self,kwargs)
+        return sql
+
+    def all(self):
+        sql = TableSQL().select_all_sql(self)
+        return sql
+    
+    def delete(self,id):
+        sql =  TableSQL().delete_data_sql(self,id)
+        return sql
+    
+
 @pytest.fixture
 def type_generator():
     generator = SQLTypeGenerator()
@@ -200,3 +213,26 @@ def test_sqlite_insert_data():
         ]
     assert values == expected_values
     assert query == expected_query
+
+
+def test_mysql_filter_data():
+    instance = DummyModel()
+    instance._meta['rdbms'] =  MysqlConnection(host='localhost',user='root',password='root')
+
+    query,values = instance.filter(age__lt=30,email='simon@gmail.com')
+    expected_query = 'SELECT * FROM dummymodel WHERE email = %s AND age < %s'
+    expected_values = ['simon@gmail.com',30]
+
+    assert query == expected_query
+    assert values == expected_values
+
+def test_sqlite_filter_data():
+    instance = DummyModel()
+    instance._meta['rdbms'] =  SQLIteConnection()
+
+    query,values = instance.filter(age__lt=30,email='simon@gmail.com')
+    expected_query = 'SELECT * FROM dummymodel WHERE email = ? AND age < ?'
+    expected_values = ['simon@gmail.com',30]
+
+    assert query == expected_query
+    assert values == expected_values   
