@@ -37,9 +37,9 @@ class DummyModel(Model):
         query,values =  TableSQL().insert_data_sql(self)[0]
         return query,values
 
-    def save_password(self):
-        sql = TableSQL().insert_data_sql(self)[1]
-        return sql
+    def has_password_insert(self):
+        result = TableSQL().insert_data_sql(self)[1]
+        return result
 
     def filter(self,**kwargs):
         sql = TableSQL().filter_data_sql(self,kwargs)
@@ -185,6 +185,8 @@ def test_mysql_insert_data():
     instance._meta['rdbms'] =  MysqlConnection(host='localhost',user='root',password='root')
     sql,dtime = instance.save(),datetime.now()
     query, values = sql
+    has_password_insert = instance.has_password_insert()
+    
 
     expected_query = (
         'INSERT INTO dummymodel (name,age,email,passwordID,created_at,updated_at) '
@@ -201,6 +203,7 @@ def test_mysql_insert_data():
         ]
     assert values == expected_values
     assert query == expected_query
+    assert has_password_insert == True
 
 def test_sqlite_insert_data():
     instance = DummyModel(
@@ -212,6 +215,7 @@ def test_sqlite_insert_data():
     instance._meta['rdbms'] =  SQLIteConnection()
     sql,dtime = instance.save(),datetime.now()
     query, values = sql
+    has_password_insert = instance.has_password_insert()
 
     expected_query = (
         'INSERT INTO dummymodel (name,age,email,passwordID,created_at,updated_at) '
@@ -227,6 +231,7 @@ def test_sqlite_insert_data():
         ]
     assert values == expected_values
     assert query == expected_query
+    assert has_password_insert == True
 
 
 def test_mysql_filter_data():

@@ -88,6 +88,7 @@ class TableSQL:
             else:
                 if isinstance(field_class,PasswordField):
                     fields.append(f'{field}ID')
+                    has_password_field = True  
                 else:
                     fields.append(field)
                 value = getattr(cls,field)
@@ -109,9 +110,7 @@ class TableSQL:
                 if field_class.auto_now and not value or value == field_class:
                     value = field_class.validate(datetime.now().time())
                 else:
-                    value = field_class.validate(value).__str__()
-            if isinstance(field_class,(PasswordField)):
-                    has_password_field = True                                                   
+                    value = field_class.validate(value).__str__()                                                           
             if isinstance(field_class,DecimalField):
                 value =  f"{field_class.validate(value):.{field_class.decimal_places}f}"            
             if value is not None:
