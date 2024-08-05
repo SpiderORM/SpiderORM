@@ -26,12 +26,20 @@ class DummyModel(Model):
     updated_at = fields.DateTimeField(auto_now=True)
 
     def create_table(self):
-        sql = TableSQL().create_table_sql(self)
+        sql = TableSQL().create_table_sql(self)[0]
+        return sql
+
+    def create_password_table(self):
+        sql = TableSQL().create_table_sql(self)[1]
         return sql
 
     def save(self):
-        query,values =  TableSQL().insert_data_sql(self)
+        query,values =  TableSQL().insert_data_sql(self)[0]
         return query,values
+
+    def save_password(self):
+        sql = TableSQL().insert_data_sql(self)[1]
+        return sql
 
     def filter(self,**kwargs):
         sql = TableSQL().filter_data_sql(self,kwargs)
@@ -129,35 +137,42 @@ def test_mysql_create_table():
     model = DummyModel()
     model._meta['rdbms'] = MysqlConnection(host='localhost',user='root',password='root')  
     sql = model.create_table()
+    sql_password_table = model.create_password_table()
+    expected_sql_password_table = ('CREATE TABLE IF NOT EXISTS passwords (id INTEGER PRIMARY KEY,hash VARCHAR(32) NOT NULL,salt VARCHAR(16) NOT NULL);')
     expected_sql = (
         'CREATE TABLE IF NOT EXISTS dummymodel ('
         'id INTEGER PRIMARY KEY AUTO_INCREMENT,'
         'name VARCHAR(120) UNIQUE,'
         'age INTEGER,'
         'email VARCHAR(120) UNIQUE,'
-        'password VARCHAR(32),'
+        'passwordID VARCHAR(32),'
         'created_at DATETIME,'
         'updated_at DATETIME);'
     )
 
     assert sql == expected_sql
+    assert sql_password_table == expected_sql_password_table
 
 def test_sqlite_create_table():
     model = DummyModel()   
     model._meta['rdbms'] = SQLIteConnection()
     sql = model.create_table()
+    sql_password_table = model.create_password_table()
+    expected_sql_password_table = ('CREATE TABLE IF NOT EXISTS passwords (id INTEGER PRIMARY KEY,hash VARCHAR(32) NOT NULL,salt VARCHAR(16) NOT NULL);')
+    
     expected_sql = (
         'CREATE TABLE IF NOT EXISTS dummymodel ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT,'
         'name VARCHAR(120) UNIQUE,'
         'age INTEGER,'
         'email VARCHAR(120) UNIQUE,'
-        'password VARCHAR(32),'
+        'passwordID VARCHAR(32),'
         'created_at DATETIME,'
         'updated_at DATETIME);'
     )
 
     assert sql == expected_sql
+    assert sql_password_table == expected_sql_password_table
 
 
 def test_mysql_insert_data():
@@ -172,15 +187,15 @@ def test_mysql_insert_data():
     query, values = sql
 
     expected_query = (
-        'INSERT INTO dummymodel (name,age,email,password,created_at,updated_at) '
+        'INSERT INTO dummymodel (name,age,email,passwordID,created_at,updated_at) '
         'VALUES (%s,%s,%s,%s,%s,%s);'
     )
-    from hashlib import sha256
+    
     expected_values = [
         'Simon Dev',
         21,
         'simon@gmail.com',
-        sha256(b'12354').digest(),
+        '12354',
         dtime.__str__(),        
         dtime.__str__(),
         ]
@@ -199,15 +214,14 @@ def test_sqlite_insert_data():
     query, values = sql
 
     expected_query = (
-        'INSERT INTO dummymodel (name,age,email,password,created_at,updated_at) '
+        'INSERT INTO dummymodel (name,age,email,passwordID,created_at,updated_at) '
         'VALUES (?,?,?,?,?,?);'
     )
-    from hashlib import sha256
     expected_values = [
         'Simon Dev',
         21,
         'simon@gmail.com',
-        sha256(b'12354').digest(),
+        '12354',
         dtime.__str__(),        
         dtime.__str__(),
         ]

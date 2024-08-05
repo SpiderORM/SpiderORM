@@ -45,19 +45,20 @@ class TableSQL:
         rdbms = cls._meta.get('rdbms')
         fields_definitions = []        
         sql_safely_password_store_table = None
+        auto_increment = ' AUTO_INCREMENT' if isinstance(rdbms,MysqlConnection) else ' AUTOINCREMENT'
 
-        for field_name, field in cls._fields.items():            
-            field_def = f"{field_name} {SQLTypeGenerator.get_sql_type(field)}"
+        for field_name, field in cls._fields.items():
+            if isinstance(field,PasswordField):
+                field_def = f"{field_name}ID {SQLTypeGenerator.get_sql_type(field)}"
+            else:
+                field_def = f"{field_name} {SQLTypeGenerator.get_sql_type(field)}"
                                             
             if isinstance(field,PasswordField):
-                sql_safely_password_store_table = f'CREATE TABLE IF NOT EXISTS passwords (id INTEGER PRIMARY KEY,hash VARCHAR({field.max_length}) NOT NULL, salt VARCHAR({len(field.salt)}) NOT NULL);'
+                sql_safely_password_store_table = f'CREATE TABLE IF NOT EXISTS passwords (id INTEGER PRIMARY KEY,hash VARCHAR({field.max_length}) NOT NULL,salt VARCHAR({field.salt_size}) NOT NULL);'
             if field.primary_key:
                 field_def += ' PRIMARY KEY'
-            if getattr(field,'auto_increment',False):
-                if isinstance(rdbms,SQLIteConnection):
-                    field_def += ' AUTOINCREMENT'
-                elif isinstance(rdbms,MysqlConnection):
-                    field_def += ' AUTO_INCREMENT'
+            if getattr(field,'auto_increment',False):              
+                    field_def += auto_increment
             if not field.null:
                 field_def += ' NOT NULL'
             if field.unique:                
@@ -76,15 +77,19 @@ class TableSQL:
         values = []
         rdbms = cls._meta.get('rdbms')
         _format_str = '%s' if isinstance(rdbms,MysqlConnection) else '?' 
+        has_password_field = False
 
         for field, field_class in cls._fields.items():   
-       
+
             if hasattr(field_class,'auto_increment'): 
                 if not field_class.auto_increment:
                     fields.append(field)     
                     value = field_class.validate(getattr(cls,field))
             else:
-                fields.append(field)
+                if isinstance(field_class,PasswordField):
+                    fields.append(f'{field}ID')
+                else:
+                    fields.append(field)
                 value = getattr(cls,field)
 
             if field_class.default is not None:                                             
@@ -106,16 +111,7 @@ class TableSQL:
                 else:
                     value = field_class.validate(value).__str__()
             if isinstance(field_class,(PasswordField)):
-
-                # TODO: Store the salt in database
-
-                # salt = os.urandom(16)
-                # _hash = pbkdf2_hmac(hash_name='sha256',password=field_class.validate(value).encode(),salt=salt,iterations=100000)
-                # value = _hash.hex() 
-                
-                _hash = sha256(field_class.validate(value).encode())
-                value = _hash.digest() 
-                               
+                    has_password_field = True                                                   
             if isinstance(field_class,DecimalField):
                 value =  f"{field_class.validate(value):.{field_class.decimal_places}f}"            
             if value is not None:
@@ -123,8 +119,9 @@ class TableSQL:
                  
         placeholders = ",".join([f"{_format_str}" for _ in fields])
         columns = ",".join(fields)        
-        return  f"INSERT INTO {cls.__class__.__name__.lower()} ({columns}) VALUES ({placeholders});",values
-
+        normal_insert = f"INSERT INTO {cls.__class__.__name__.lower()} ({columns}) VALUES ({placeholders});",values
+        return  normal_insert, has_password_field
+    
     @staticmethod
     def filter_data_sql(cls,kwargs):
         kwargs__lt:dict = {} # less than 

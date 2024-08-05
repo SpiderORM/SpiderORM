@@ -57,7 +57,7 @@ class Runner(models.Model):
 
 # Runner().create_table()
 
-User().create_table()
+# User().create_table()
 # Product().create_table()
 
 try:
@@ -68,7 +68,7 @@ try:
         image = 'img12.png',
         )
 
-    # user_1.save()    
+    user_1.save()    
 
     # product_1 = Product(
     #     name = 'Laptop425',
