@@ -1,4 +1,4 @@
-from spiderweb_orm.fields import Field
+from spiderweb_orm.fields import Field,PasswordField
 from spiderweb_orm.sql_utils import TableSQL
 from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
 from spiderweb_orm.mysql.connection import MysqlConnection
@@ -35,9 +35,11 @@ class Model(metaclass=ModelMeta):
                 raise AttributeError(f"{key} is not a valid field for {self.__class__.__name__}")
        
     def create_table(self):
-        sql = TableSQL.create_table_sql(self)        
+        sql,sql_safely_password_store = TableSQL.create_table_sql(self)
         with self._rdbms() as conn:
             conn.execute(sql)
+            if sql_safely_password_store:
+                conn.execute(sql_safely_password_store)
             print('Table created successfully.')
     
     
@@ -73,10 +75,35 @@ class Model(metaclass=ModelMeta):
         return data
 
     def save(self):
-        query,values = TableSQL.insert_data_sql(self)         
+        normal_insert,has_password = TableSQL.insert_data_sql(self)         
+        query, values = normal_insert
+        pk = None
         with self._rdbms() as conn:            
-            conn.execute(query,values)
+            conn.execute(query, values)                    
+            conn.execute(f'SELECT * FROM {self.__class__.__name__.lower()};')
+            pk = conn.fetchall()[-1][0]           
+            if has_password:
+                password = None
+                conn.execute(f'UPDATE {self.__class__.__name__.lower()} SET passwordID = {pk} WHERE id = {pk};')
+                for field_name, field_class in self._fields.items():
+                    if isinstance(field_class,PasswordField):
+                        password = field_class.validate(getattr(self,field_name))                    
+                        salt = field_class.salt 
+                        hash_name = field_class.hash  
+                        _iter = field_class.iterations 
+                
+                from hashlib import pbkdf2_hmac,sha256
+
+                salt = salt[0]
+                _hash = pbkdf2_hmac(
+                    hash_name=hash_name,
+                    password=password.encode(),
+                    salt=salt.to_bytes(),
+                    iterations= _iter).hex()       
+            query = f"INSERT INTO passwords (id,hash,salt) VALUES ({pk},'{_hash}','{salt}');"            
+            conn.execute(query)
             print("Data recorded successfully.")
+       
 
     def delete(self,id):
         query,param = TableSQL.delete_data_sql(self,id)

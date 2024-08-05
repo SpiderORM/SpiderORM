@@ -66,4 +66,15 @@ def validate_default(value,default):
 def validate_email(value):
     value = verify_email_pattern(value)
     if not value:
-        raise ValidationError(f"Value don't match with the email pattern.")    
+        raise ValidationError(f"Value don't match with the email pattern.") 
+
+def validate_password(value,hash,salt,max_length):
+    try:
+        from hashlib import algorithms_available
+    except ImportError:
+        raise ImportError()
+
+    validate_choices(hash,choices=list(algorithms_available))
+    validate_string(value,max_length)
+    if not isinstance(salt,bytes):
+        raise ValidationError(f"salt must be a bytes instance.")

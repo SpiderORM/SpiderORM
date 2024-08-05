@@ -12,7 +12,8 @@ from spiderweb_orm.validators.fields_validations import (
     validate_file_type,validate_float,
     validate_integer,validate_null,
     validate_string,validate_url,
-    validate_email,validate_time
+    validate_email,validate_time,
+    validate_password
 )
 
 
@@ -170,12 +171,17 @@ class TextField(CharField):
         return value
 
 class PasswordField(CharField):
-    def __init__(self, max_length=32, primary_key=False, null=True, unique=False, default=None):
+    def __init__(self,hash_name='sha256',salt_size=16,iterations=10e5, max_length=32, primary_key=False, null=True, unique=False, default=None):
         super().__init__(max_length, primary_key, null, unique, default)
+        import os 
+        self.hash = hash_name
+        self.salt_size = salt_size
+        self.salt = os.urandom(salt_size)
+        self.iterations = int(iterations)
 
     def validate(self, value):
         value = Field().validate(value)
-        validate_string(value,self.max_length)
+        validate_password(value,self.hash,self.salt,self.max_length)
         return value
     
 class EmailField(CharField):
