@@ -1,0 +1,14 @@
+name: Fork Handler
+
+on: fork
+
+jobs:
+  notify:
+    runs-on: ubunto-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Send Notification
+        run: echo 'Repository forked'
