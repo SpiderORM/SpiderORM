@@ -195,3 +195,71 @@ class TableSQL:
         param = str(id)
         query = f"DELETE FROM {cls.__class__.__name__.lower()} WHERE id = {_format_str};"
         return query,param
+
+    @staticmethod
+    def alter_data_sql(cls,**kwargs):
+        kwargs__lt:dict = {} # less than 
+        kwargs__lte:dict = {} # less than or equal to
+        kwargs__gt:dict = {} # great than 
+        kwargs__gte:dict = {} # great than or equal to
+        kwargs__eq:dict = {} # equal to
+        kwargs__bt:dict = {} # between
+        params:list = []
+        values:list = []
+        field_to_update = [field for field in kwargs.keys()][0]
+        value_updated = [value for value in kwargs.values()][0]
+        _format_str = '%s' if isinstance(cls._meta.get('rdbms'),MysqlConnection) else '?'
+
+        kwargs.pop(field_to_update)  
+        for key, value in kwargs.items():                                   
+            if key.endswith('__lt'):               
+                kwargs__lt[key] = value            
+            elif key.endswith('__gt'):
+                kwargs__gt[key] = value
+            elif key.endswith('__lte'):
+                kwargs__lte[key] = value
+            elif key.endswith('__gte'):
+                kwargs__gte[key] = value
+            elif key.endswith('__bt'):
+                kwargs__bt[key] = value
+            else:
+                kwargs__eq[key] = value
+
+
+        query = f"UPDATE {cls.__class__.__name__.lower()} SET {field_to_update} = {value_updated} WHERE "
+
+        if kwargs__eq:
+            for eq_param in [f"{key} = {_format_str} " for key in kwargs__eq.keys()]:
+                params.append(eq_param)
+            for value in kwargs__eq.values():
+                values.append(value)
+        if kwargs__lt: 
+            for lt_param in [f"{key.removesuffix('__lt')} < {_format_str}" for key in kwargs__lt.keys()]:
+                params.append(lt_param)           
+            for value in kwargs__lt.values():               
+               values.append(value)
+        if kwargs__lte: 
+            for lte_param in [f"{key.removesuffix('__lte')} <= {_format_str}" for key in kwargs__lte.keys()]:
+                params.append(lte_param)           
+            for value in kwargs__lte.values():               
+               values.append(value)
+        if kwargs__gt:             
+            for gt_params in [f"{key.removesuffix('__gt')} > {_format_str}" for key in kwargs__gt.keys()]:
+                params.append(gt_params)                      
+            for value in kwargs__gt.values():
+               values.append(value)
+        if kwargs__gte:             
+            for gte_params in [f"{key.removesuffix('__gte')} >= {_format_str}" for key in kwargs__gte.keys()]:
+                params.append(gte_params)                      
+            for value in kwargs__gte.values():
+               values.append(value)
+        if kwargs__bt:
+            for bt_params in [f"{key.removesuffix('__bt')} BETWEEN {_format_str} AND {_format_str}" for key in kwargs__bt.keys()]:
+                params.append(bt_params)
+            for value in kwargs__bt.values():
+                values.append(value[0])
+                values.append(value[1])
+        
+        query += 'AND '.join(params)
+
+        return query,values

@@ -109,4 +109,10 @@ class Model(metaclass=ModelMeta):
         query,param = TableSQL.delete_data_sql(self,id)
         with self._rdbms() as conn:            
             conn.execute(query,param)
-            print('Data deleted successfully')            
+            print('Data deleted successfully') 
+
+    def alter(self,**kwargs):
+        query,values = TableSQL.alter_data_sql(self,kwargs)
+        with self._rdbms() as conn:
+            conn.execute(query,values)  
+            print('Data altered successfullt.')      
