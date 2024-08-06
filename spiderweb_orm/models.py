@@ -1,7 +1,7 @@
 from spiderweb_orm.fields import Field,PasswordField
 from spiderweb_orm.sql_utils import TableSQL
 from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
-from spiderweb_orm.mysql.connection import MysqlConnection
+
 
 class ModelMeta(type):
     def __new__(cls,name,bases,attrs):
@@ -19,7 +19,7 @@ class ModelMeta(type):
 class Model(metaclass=ModelMeta):
 
     class MetaData:   
-        rdbms:str
+        rdbms = SQLIteConnection()
     
     def get_meta_attr(self,attr,default=None):
         return self._meta.get(attr, default)
@@ -83,6 +83,7 @@ class Model(metaclass=ModelMeta):
             conn.execute(f'SELECT * FROM {self.__class__.__name__.lower()};')
             pk = conn.fetchall()[-1][0]           
             if has_password:
+
                 password = None
                 conn.execute(f'UPDATE {self.__class__.__name__.lower()} SET passwordID = {pk} WHERE id = {pk};')
                 for field_name, field_class in self._fields.items():
@@ -100,8 +101,8 @@ class Model(metaclass=ModelMeta):
                     password=password.encode(),
                     salt=salt.to_bytes(),
                     iterations= _iter).hex()       
-            query = f"INSERT INTO passwords (id,hash,salt) VALUES ({pk},'{_hash}','{salt}');"            
-            conn.execute(query)
+                query = f"INSERT INTO passwords (id,hash,salt) VALUES ({pk},'{_hash}','{salt}');"            
+                conn.execute(query)
             print("Data recorded successfully.")
        
 

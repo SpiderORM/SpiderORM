@@ -12,14 +12,17 @@ path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(path)
 
 
-from spiderweb_orm import fields, models
-from spiderweb_orm.validators.exceptions import ValidationError
-from spiderweb_orm.sanitizers import sanitize_string,sanitize_image,sanitize_boolean,sanitize_time,sanitize_decimal
+from spiderweb_orm import fields, models, sanitizers
 from spiderweb_orm.mysql.connection import MysqlConnection
-from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
 
-# create your models here
+# Create a DB Connection
+DB_CONNECTION = MysqlConnection(
+    host='localhost',
+    user='root',
+    password='root',
+    database='mysql_db')
 
+# Create your models here
 class User(models.Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
     name = fields.CharField(max_length=120,null=False)
@@ -28,11 +31,12 @@ class User(models.Model):
     joined_on = fields.DateTimeField(auto_now=True)
     image = fields.ImageField()
     is_active = fields.BooleanField(default=True)
-
+    
     class MetaData:
-        rdbms = MysqlConnection(host='localhost',user='root',password='root',database='mysql_db')
+        rdbms = DB_CONNECTION
 
-
+# You can create a model without specifying the RDBMS
+# By default Spider-ORM uses SQLite3
 class Product(models.Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
     name = fields.CharField(max_length=120)
@@ -43,87 +47,52 @@ class Product(models.Model):
     image = fields.ImageField()
     in_stock = fields.BooleanField()
 
-    class MetaData:
-        rdbms = SQLIteConnection()
 
 
+# Creating Table
+user_table =  User()
+# user_table.create_table()
 
-class Runner(models.Model):
-    id = fields.IntegerField(primary_key=True,auto_increment=True)
-    name = fields.CharField(max_length=120,null=False)
-    email = fields.EmailField(max_length=255,null=False)
-    arrive_time = fields.TimeField()
-    
+product_table = Product()
+# product_table.create_table()
 
-# Runner().create_table()
 
-# User().create_table()
-# Product().create_table()
+# Inserting Data
+user = User(
+    name = sanitizers.sanitize_string('Simon Dev'),
+    email = sanitizers.sanitize_string('simondev@gmail.com'),
+    password = sanitizers.sanitize_string('mypassword'),
+    image = sanitizers.sanitize_image('img.png')
+)
+product = Product(
+    name = sanitizers.sanitize_string('Laptop'),
+    price = sanitizers.sanitize_decimal(1200.32),
+    image = sanitizers.sanitize_image('img.jpg'),
+    in_stock = sanitizers.sanitize_boolean(True)
+)
 
-try:
-    user_1 = User(
-        name = 'Mr. Aguinaldo',
-        email = 'mraguinaldo3@gmail.com',
-        password = 'password413',
-        image = 'img12.png',
-        )
+# Saving data in database
+user.save()
+product.save()
 
-    user_1.save()    
+# Get data
+users =  user_table.all()
+products = product_table.all()
 
-    # product_1 = Product(
-    #     name = 'Laptop425',
-    #     price = 1230.52,
-    #     image = 'laptop2.png',
-    #     in_stock = True
-    # )
-    
-    product_2 = Product(
-        name = sanitize_string('Laptop5'),
-        price = sanitize_decimal(1500.522500),
-        image = sanitize_image('laptop635.png'),
-        in_stock = sanitize_boolean('true')
-    )
+# Filter data with get method
+user_1 = user_table.get(id=1)   # retrieve user with id = 1 
+product_1 = product_table.get(id=1)     # retrieve product with id = 1
 
-    # product_3 = Product(
-    #     name = 'DesktopLenovo',
-    #     price = 5220.52,
-    #     image = 'laptop35.png',
-    #     in_stock = True
-    # )
+# Filter data with method filter
+# retrieve all active users with id less than 20
+users_filtered = user_table.filter(id__lt=20,is_active=True)    
 
-    # import datetime
-    # product_4 = Product(
-    #     name = 'DesktopLenovo',
-    #     price = 5220.52,
-    #     manufacture_date=datetime.date(2024,5,3),
-    #     image = 'laptop55r.png',
-    #     in_stock = True
-    # )
+# retrieve all products with price between 1000 and 3000 
+# and discount great than 5
+products_filtered = product_table.filter(price__bt=(1000,3000),discount__gt=5)  
 
-    # # product_1.save()
-    # product_2.save()
-    # product_3.save()
-    # product_4.save()
-    
-    # runner_1 = Runner(
-    #     name=sanitize_string('John Speed'),
-    #     email=sanitize_string('john@gmail.com'),        
-    #     arrive_time= sanitize_time('00:03:52'))
-
-    # runner_1.save()
-
-except ValidationError as e:
-    raise e
-
-# user = User)
-# user.delete(id=1)
-
-# products = Product().filter(price__gt=100,discount__lt=10)
-
-# # products = Product().filter(price__gte=5000)
-
-# # products = Product().filter(price__bt=(1000,6000),manufacture_date__lte='2024-05-03')
-# print(products)
-
-# # runners = Runner().filter(name='John Speed')
-# # print(runners)
+# Deleting Data
+# Delete user with id = 1
+user_table.delete(id=1)
+# Delete product with id = 1
+product_table.delete(id=2)
