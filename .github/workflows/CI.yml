@@ -44,3 +44,5 @@ jobs:
     - name: Run Tests
       run: pytest --continue-on-collection-errors
     
+    - name: Create Tag
+      run: git tag v.0.1.0
