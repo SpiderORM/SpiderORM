@@ -30,7 +30,7 @@ jobs:
     - name: Publish to PyPI
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        TWINE_PASSWORD: pypi-AgEIcHlwaS5vcmcCJGI1NzRjMGQ4LWNjZDYtNDVlOS1iZDkyLWFhNjE0NDk0Y2QzZAACKlszLCI4ZDBlMzJhNC1lZjRhLTRiNjEtYTczOC1iMTJmNmZhNTAyZmEiXQAABiCn7_NQLcG6CHi5yruBC9C2IIPuAF62_HFClNshCEUoZg
       
       run: |
         echo ${{ secrets.PY_PI_PASSWORD }}
