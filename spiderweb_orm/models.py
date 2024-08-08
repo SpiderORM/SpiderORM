@@ -71,7 +71,7 @@ class Model(metaclass=ModelMeta):
         query = TableSQL.select_all_sql(self)
         with self._rdbms() as conn:
             conn.execute(query)
-            data = conn.fetchall()
+            data = conn.fetchall()            
         return data
 
     def save(self):
@@ -88,12 +88,12 @@ class Model(metaclass=ModelMeta):
                 conn.execute(f'UPDATE {self.__class__.__name__.lower()} SET passwordID = {pk} WHERE id = {pk};')
                 for field_name, field_class in self._fields.items():
                     if isinstance(field_class,PasswordField):
-                        password = field_class.validate(getattr(self,field_name))                    
+                        password = getattr(self,field_name)
                         salt = field_class.salt 
                         hash_name = field_class.hash  
                         _iter = field_class.iterations 
                 
-                from hashlib import pbkdf2_hmac,sha256
+                from hashlib import pbkdf2_hmac
 
                 salt = salt[0]
                 _hash = pbkdf2_hmac(
@@ -105,9 +105,14 @@ class Model(metaclass=ModelMeta):
                 conn.execute(query)
             print("Data recorded successfully.")
        
-
     def delete(self,id):
         query,param = TableSQL.delete_data_sql(self,id)
         with self._rdbms() as conn:            
             conn.execute(query,param)
-            print('Data deleted successfully')            
+            print('Data deleted successfully') 
+
+    def update(self,**kwargs):
+        query,values = TableSQL().update_data_sql(self,kwargs)        
+        with self._rdbms() as conn:
+            conn.execute(query,values)  
+            print('Data altered successfully.')

@@ -47,6 +47,9 @@ class Product(models.Model):
     image = fields.ImageField()
     in_stock = fields.BooleanField()
 
+    class MetaData:
+        rdbms =  DB_CONNECTION
+
 
 
 # Creating Table
@@ -59,40 +62,48 @@ product_table = Product()
 
 # Inserting Data
 user = User(
-    name = sanitizers.sanitize_string('Simon Dev'),
-    email = sanitizers.sanitize_string('simondev@gmail.com'),
-    password = sanitizers.sanitize_string('mypassword'),
-    image = sanitizers.sanitize_image('img.png')
+    name = 'Simon Dev',
+    email = 'simondev@gmail.com',
+    password = 'mypassword',
+    image ='img.png'
 )
 product = Product(
-    name = sanitizers.sanitize_string('Laptop'),
-    price = sanitizers.sanitize_decimal(1200.32),
-    image = sanitizers.sanitize_image('img.jpg'),
-    in_stock = sanitizers.sanitize_boolean(True)
+    name = 'Laptop',
+    price = 1200.32,
+    image = 'img.jpg',
+    in_stock = True
 )
 
 # Saving data in database
-user.save()
-product.save()
+# user.save()
+# product.save()
 
 # Get data
-users =  user_table.all()
-products = product_table.all()
+# users =  user_table.all()
+# products = product_table.all()
 
-# Filter data with get method
-user_1 = user_table.get(id=1)   # retrieve user with id = 1 
-product_1 = product_table.get(id=1)     # retrieve product with id = 1
 
-# Filter data with method filter
-# retrieve all active users with id less than 20
-users_filtered = user_table.filter(id__lt=20,is_active=True)    
+# # Filter data with get method
+# user_1 = user_table.get(id=1)   # retrieve user with id = 1 
+# product_1 = product_table.get(id=1)     # retrieve product with id = 1
 
-# retrieve all products with price between 1000 and 3000 
-# and discount great than 5
-products_filtered = product_table.filter(price__bt=(1000,3000),discount__gt=5)  
+# # Filter data with method filter
+# # retrieve all active users with id less than 20
+# users_filtered = user_table.filter(id__lt=20,is_active=True)    
 
-# Deleting Data
+# # retrieve all products with price between 1000 and 3000 
+# # and discount great than 5
+# products_filtered = product_table.filter(price__bt=(1000,3000),discount__gt=5)  
+
+
+# # Deleting Data
 # Delete user with id = 1
-user_table.delete(id=1)
-# Delete product with id = 1
-product_table.delete(id=2)
+# user_table.delete(id=1)
+# # Delete product with id = 1
+# product_table.delete(id=2)
+
+
+# Update Data
+
+# user_table.update(email='newemail@gmail.com',id=10)
+product_table.update(name='New Name',price=12)
