@@ -1,4 +1,4 @@
-name: CI on Pull Request
+name: CI 
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
+      mysql-master:
         image: mysql:latest
         env:
           MYSQL_HOST: localhost
@@ -22,7 +22,8 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --silent"
+          --name:mysql-master
+          --health-cmd="mysqladmin ping "
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -34,7 +35,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.12.2'
 
     - name: Install dependencies
       run: |
