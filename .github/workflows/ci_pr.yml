@@ -16,6 +16,7 @@ jobs:
       mysql:
         image: mysql:latest
         env:
+          MYSQL_HOST: localhost
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: root
         ports:
@@ -40,6 +41,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Connect to mysql
-      run: |
-        mysql -h localhost -u root -p root
+    - name: Run Tests
+      run: pytest -vv
+    
