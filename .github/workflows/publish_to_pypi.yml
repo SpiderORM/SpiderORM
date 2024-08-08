@@ -4,7 +4,9 @@ on:
   push:
     tags:
       - v*.*.* # Isso será acionado quando uma tag que começa com "v" seguida por números, como v1.0.0, for criada
-
+    branches:
+      - main
+    
 jobs:
   build:
     runs-on: ubuntu-latest
