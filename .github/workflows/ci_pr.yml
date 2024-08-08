@@ -42,4 +42,4 @@ jobs:
 
     - name: Connect to mysql
       run: |
-        mysql -h localhost -u root -p
+        mysql -h localhost -u root -p root
