@@ -182,7 +182,7 @@ def test_mysql_insert_data():
         email = 'simon@gmail.com',
         password = '12354'
     )
-    instance._meta['rdbms'] =  MysqlConnection(host='localhost',user='root',password='root')
+    instance._meta['rdbms'] =  MysqlConnection(host='0.0.0.0',user='root',password='root')
     sql,dtime = instance.save(),datetime.now()
     query, values = sql
     has_password_insert = instance.has_password_insert()
