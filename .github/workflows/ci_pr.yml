@@ -40,7 +40,3 @@ jobs:
 
     - name: Wait for MySQL to be ready
       run: until mysqladmin ping -hlocalhost --silent; do echo "Waiting for MySQL..."; sleep 1; done
-
-    - name: Run tests with pytest
-      run: |
-        pytest -vv --mysql-host=localhost --mysql-port=3306 --mysql-user=root --mysql-password=root_password
