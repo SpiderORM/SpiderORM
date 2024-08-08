@@ -33,7 +33,7 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       
       run: |
-        echo ${{ secrets.PYPI_PASSWORD }}
+        echo ${{ secrets.PY_PI_PASSWORD }}
         twine upload --verbose -r pypi dist/*
 
     - name: Clean up build artifacts
