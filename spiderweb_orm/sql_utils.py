@@ -2,11 +2,10 @@
 
 """
 from spiderweb_orm.fields import *
-from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
 from spiderweb_orm.mysql.connection import MysqlConnection
 from datetime import datetime
-from hashlib import sha256,pbkdf2_hmac
-import os
+
+
 
 class SQLTypeGenerator:
     
@@ -84,7 +83,7 @@ class TableSQL:
             if hasattr(field_class,'auto_increment'): 
                 if not field_class.auto_increment:
                     fields.append(field)     
-                    value = field_class.validate(getattr(cls,field))
+                    value = getattr(cls,field)
             else:
                 if isinstance(field_class,PasswordField):
                     fields.append(f'{field}ID')
@@ -95,24 +94,24 @@ class TableSQL:
 
             if field_class.default is not None:                                             
                 if value == field_class:                     
-                    value = field_class.validate(value.default)
+                    value = value.default
                 else:                    
-                    value = field_class.validate(value)
+                    value = value
             
             if isinstance(field_class,(DateField,DateTimeField)):
                 if field_class.auto_now and not value or value == field_class:  
                     _date = datetime.now().date()
                     _datetime =datetime.now()
-                    value = field_class.validate(_date).__str__() if isinstance(field_class,DateField) else field_class.validate(_datetime).__str__()
+                    value = _date.__str__() if isinstance(field_class,DateField) else _datetime.__str__()
                 else:
-                    value = field_class.validate(value)
+                    value = value
             if isinstance(field_class,TimeField):
                 if field_class.auto_now and not value or value == field_class:
-                    value = field_class.validate(datetime.now().time())
+                    value = datetime.now().time()
                 else:
-                    value = field_class.validate(value).__str__()                                                           
+                    value = value.__str__()                                                           
             if isinstance(field_class,DecimalField):
-                value =  f"{field_class.validate(value):.{field_class.decimal_places}f}"            
+                value =  f"{value:.{field_class.decimal_places}f}"            
             if value is not None:
                 values.append(value)                    
                  
@@ -120,7 +119,7 @@ class TableSQL:
         columns = ",".join(fields)        
         normal_insert = f"INSERT INTO {cls.__class__.__name__.lower()} ({columns}) VALUES ({placeholders});",values
         return  normal_insert, has_password_field
-    
+        
     @staticmethod
     def filter_data_sql(cls,kwargs):
         kwargs__lt:dict = {} # less than 
@@ -146,11 +145,9 @@ class TableSQL:
                 kwargs__bt[key] = value
             else:
                 kwargs__eq[key] = value
-
-        query =  f"SELECT * FROM {cls.__class__.__name__.lower()} WHERE "         
         
         if kwargs__eq:
-            for eq_param in [f"{key} = {_format_str} " for key in kwargs__eq.keys()]:
+            for eq_param in [f"{key} = {_format_str}" for key in kwargs__eq.keys()]:
                 params.append(eq_param)
             for value in kwargs__eq.values():
                 values.append(value)
@@ -181,8 +178,8 @@ class TableSQL:
                 values.append(value[0])
                 values.append(value[1])
         
-        query += 'AND '.join(params)
-
+        query =  f"SELECT * FROM {cls.__class__.__name__.lower()} WHERE " + " AND ".join(params)
+        
         return query,values
     
     @staticmethod
@@ -196,70 +193,44 @@ class TableSQL:
         query = f"DELETE FROM {cls.__class__.__name__.lower()} WHERE id = {_format_str};"
         return query,param
 
-    @staticmethod
-    def alter_data_sql(cls,**kwargs):
-        kwargs__lt:dict = {} # less than 
-        kwargs__lte:dict = {} # less than or equal to
-        kwargs__gt:dict = {} # great than 
-        kwargs__gte:dict = {} # great than or equal to
-        kwargs__eq:dict = {} # equal to
-        kwargs__bt:dict = {} # between
+    
+    def update_data_sql(self,cls,kwargs):    
         params:list = []
-        values:list = []
-        field_to_update = [field for field in kwargs.keys()][0]
-        value_updated = [value for value in kwargs.values()][0]
+        values:list = []     
         _format_str = '%s' if isinstance(cls._meta.get('rdbms'),MysqlConnection) else '?'
-
-        kwargs.pop(field_to_update)  
-        for key, value in kwargs.items():                                   
-            if key.endswith('__lt'):               
-                kwargs__lt[key] = value            
-            elif key.endswith('__gt'):
-                kwargs__gt[key] = value
-            elif key.endswith('__lte'):
-                kwargs__lte[key] = value
-            elif key.endswith('__gte'):
-                kwargs__gte[key] = value
-            elif key.endswith('__bt'):
-                kwargs__bt[key] = value
-            else:
-                kwargs__eq[key] = value
-
-
-        query = f"UPDATE {cls.__class__.__name__.lower()} SET {field_to_update} = {value_updated} WHERE "
-
-        if kwargs__eq:
-            for eq_param in [f"{key} = {_format_str} " for key in kwargs__eq.keys()]:
-                params.append(eq_param)
-            for value in kwargs__eq.values():
-                values.append(value)
-        if kwargs__lt: 
-            for lt_param in [f"{key.removesuffix('__lt')} < {_format_str}" for key in kwargs__lt.keys()]:
-                params.append(lt_param)           
-            for value in kwargs__lt.values():               
-               values.append(value)
-        if kwargs__lte: 
-            for lte_param in [f"{key.removesuffix('__lte')} <= {_format_str}" for key in kwargs__lte.keys()]:
-                params.append(lte_param)           
-            for value in kwargs__lte.values():               
-               values.append(value)
-        if kwargs__gt:             
-            for gt_params in [f"{key.removesuffix('__gt')} > {_format_str}" for key in kwargs__gt.keys()]:
-                params.append(gt_params)                      
-            for value in kwargs__gt.values():
-               values.append(value)
-        if kwargs__gte:             
-            for gte_params in [f"{key.removesuffix('__gte')} >= {_format_str}" for key in kwargs__gte.keys()]:
-                params.append(gte_params)                      
-            for value in kwargs__gte.values():
-               values.append(value)
-        if kwargs__bt:
-            for bt_params in [f"{key.removesuffix('__bt')} BETWEEN {_format_str} AND {_format_str}" for key in kwargs__bt.keys()]:
-                params.append(bt_params)
-            for value in kwargs__bt.values():
-                values.append(value[0])
-                values.append(value[1])
         
-        query += 'AND '.join(params)
+        field_to_update = [field for field in kwargs.keys() if self.get_field_type(field,cls)][0]        
+        value_updated = [value for value in kwargs.values()][0]
 
+        kwargs.pop(field_to_update) 
+
+        cleaned_data = self.clean_data(cls,kwargs)        
+        for key, value in cleaned_data.items():        
+            params.append(f'{key} = {_format_str} ')
+            values.append(value)
+           
+           
+
+        query = f"UPDATE {cls.__class__.__name__.lower()} SET {field_to_update} = '{value_updated}' WHERE " + "AND ".join(params)        
+        
         return query,values
+
+    
+    def clean_data(self,cls,kwargs):
+        cleaned_data = {}
+        for key, value in kwargs.items():
+            field_type = self.get_field_type(key,cls)
+
+            if isinstance(field_type,DecimalField):  
+                validated_value = field_type.validate(value)
+                cleaned_data[key] = validated_value
+            else:
+                cleaned_data[key] = value                                
+        return cleaned_data
+
+    def get_field_type(self,field,cls):
+        try:
+            field_type = cls._fields[field]
+            return field_type
+        except KeyError:
+            raise KeyError(f"{field} is no a valid field to {cls.__class__.__name__}.")

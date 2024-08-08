@@ -1,7 +1,7 @@
 from spiderweb_orm.fields import Field,PasswordField
 from spiderweb_orm.sql_utils import TableSQL
 from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
-from spiderweb_orm.mysql.connection import MysqlConnection
+
 
 class ModelMeta(type):
     def __new__(cls,name,bases,attrs):
@@ -19,7 +19,7 @@ class ModelMeta(type):
 class Model(metaclass=ModelMeta):
 
     class MetaData:   
-        rdbms:str
+        rdbms = SQLIteConnection()
     
     def get_meta_attr(self,attr,default=None):
         return self._meta.get(attr, default)
@@ -71,7 +71,7 @@ class Model(metaclass=ModelMeta):
         query = TableSQL.select_all_sql(self)
         with self._rdbms() as conn:
             conn.execute(query)
-            data = conn.fetchall()
+            data = conn.fetchall()            
         return data
 
     def save(self):
@@ -87,12 +87,12 @@ class Model(metaclass=ModelMeta):
                 conn.execute(f'UPDATE {self.__class__.__name__.lower()} SET passwordID = {pk} WHERE id = {pk};')
                 for field_name, field_class in self._fields.items():
                     if isinstance(field_class,PasswordField):
-                        password = field_class.validate(getattr(self,field_name))                    
+                        password = getattr(self,field_name)
                         salt = field_class.salt 
                         hash_name = field_class.hash  
                         _iter = field_class.iterations 
                 
-                from hashlib import pbkdf2_hmac,sha256
+                from hashlib import pbkdf2_hmac
 
                 salt = salt[0]
                 _hash = pbkdf2_hmac(
@@ -100,19 +100,18 @@ class Model(metaclass=ModelMeta):
                     password=password.encode(),
                     salt=salt.to_bytes(),
                     iterations= _iter).hex()       
-            query = f"INSERT INTO passwords (id,hash,salt) VALUES ({pk},'{_hash}','{salt}');"            
-            conn.execute(query)
+                query = f"INSERT INTO passwords (id,hash,salt) VALUES ({pk},'{_hash}','{salt}');"            
+                conn.execute(query)
             print("Data recorded successfully.")
        
-
     def delete(self,id):
         query,param = TableSQL.delete_data_sql(self,id)
         with self._rdbms() as conn:            
             conn.execute(query,param)
             print('Data deleted successfully') 
 
-    def alter(self,**kwargs):
-        query,values = TableSQL.alter_data_sql(self,kwargs)
+    def update(self,**kwargs):
+        query,values = TableSQL().update_data_sql(self,kwargs)        
         with self._rdbms() as conn:
             conn.execute(query,values)  
-            print('Data altered successfullt.')      
+            print('Data altered successfully.')

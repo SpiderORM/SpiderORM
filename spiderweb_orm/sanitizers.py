@@ -21,7 +21,7 @@ def sanitize_float(value):
         raise ValueError(f"Invalid float value: {value}.")
 
 def sanitize_decimal(value):
-    try:
+    try:    
         return Decimal(value)
     except ValueError:
         raise ValueError(f"Invalid decimal value: {value}.")

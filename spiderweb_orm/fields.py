@@ -38,7 +38,7 @@ class CharField(Field):
 
     def validate(self, value):
         value = super().validate(value)
-        validate_string(value,self.max_length)
+        value = validate_string(value,self.max_length)
         return value
 
 class IntegerField(Field):
@@ -48,7 +48,7 @@ class IntegerField(Field):
 
     def validate(self, value):
         value = super().validate(value)
-        validate_integer(value)
+        value = validate_integer(value)
         return value
     
 class DecimalField(Field):
@@ -59,7 +59,7 @@ class DecimalField(Field):
             
     def validate(self, value):
         value = super().validate(value)
-        validate_decimal(value)
+        value = validate_decimal(value)
         return value
 
 class FloatField(Field):
@@ -68,7 +68,7 @@ class FloatField(Field):
 
     def validate(self, value):        
         value = super().validate(value)
-        validate_float(value)
+        value = validate_float(value)
         return value
 
 class BooleanField(Field):
@@ -77,7 +77,7 @@ class BooleanField(Field):
 
     def validate(self, value):
         value =  super().validate(value)
-        validate_boolean(value)
+        value = validate_boolean(value)
         return value
 
 class DateField(Field):
@@ -87,7 +87,7 @@ class DateField(Field):
 
     def validate(self, value):        
         value =  super().validate(value)
-        validate_date(value)
+        value = validate_date(value)
         return value
                 
 class DateTimeField(Field):
@@ -97,7 +97,7 @@ class DateTimeField(Field):
 
     def validate(self, value):
         value = super().validate(value)
-        validate_datetime(value)
+        value = validate_datetime(value)
         return value
 
 class TimeField(Field):
@@ -107,7 +107,7 @@ class TimeField(Field):
 
     def validate(self, value):
         value = super().validate(value)
-        validate_time(value)
+        value = validate_time(value)
         return value
 
 class ChoiceField(CharField):    
@@ -117,8 +117,8 @@ class ChoiceField(CharField):
     
     def validate(self, value):        
         value = Field().validate(value)
-        validate_string(value,self.max_length)
-        validate_choices(value,self.choices)
+        value = validate_string(value,self.max_length)
+        value = validate_choices(value,self.choices)
         return value
 
 class ImageField(CharField):
@@ -127,7 +127,7 @@ class ImageField(CharField):
 
     def validate(self, value):
         value = Field().validate(value)
-        validate_string(value,self.max_length)        
+        value = validate_string(value,self.max_length)        
         return value
     
 class FileField(CharField):
@@ -137,8 +137,8 @@ class FileField(CharField):
 
     def validate(self, value):
         value = Field().validate(value)
-        validate_string(value,self.max_length)                
-        validate_file_type(value,self.allowed_types)
+        value = validate_string(value,self.max_length)                
+        value = validate_file_type(value,self.allowed_types)
         return value
     
 class URLField(CharField):
@@ -147,8 +147,8 @@ class URLField(CharField):
 
     def validate(self, value):
         value = Field().validate(value)
-        validate_url(value)
-        validate_string(value,self.max_length)        
+        value = validate_url(value)
+        value = validate_string(value,self.max_length)        
         return value
 
 class ForeignKey(Field):
@@ -158,7 +158,7 @@ class ForeignKey(Field):
 
     def validate(self, value):
         value =  super().validate(value)
-        validate_integer(value)
+        value = validate_integer(value)
         return value 
     
 class TextField(CharField):
@@ -167,7 +167,7 @@ class TextField(CharField):
 
     def validate(self, value):
         value =  super().validate(value)
-        validate_string(value,self.max_length)
+        value = validate_string(value,self.max_length)
         return value
 
 class PasswordField(CharField):
@@ -181,7 +181,7 @@ class PasswordField(CharField):
 
     def validate(self, value):
         value = Field().validate(value)
-        validate_password(value,self.hash,self.salt,self.max_length)
+        value = validate_password(value,self.hash,self.salt,self.max_length)
         return value
     
 class EmailField(CharField):
@@ -190,8 +190,8 @@ class EmailField(CharField):
 
     def validate(self, value):
         value = Field().validate(value)        
-        validate_string(value,self.max_length)
-        validate_email(value)
+        value = validate_string(value,self.max_length)
+        value = validate_email(value)
         return value
 
 
@@ -203,5 +203,5 @@ class ManyToManyField(Field):
 
     def validate(self, value):
         value =  super().validate(value)
-        validate_integer(value)
+        value = validate_integer(value)
         return value 
