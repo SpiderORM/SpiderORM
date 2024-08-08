@@ -22,7 +22,6 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --name:mysql-master
           --health-cmd="mysqladmin ping "
           --health-interval=10s
           --health-timeout=5s
