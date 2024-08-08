@@ -135,7 +135,7 @@ def test_unknow_field(type_generator):
 
 def test_mysql_create_table():
     model = DummyModel()
-    model._meta['rdbms'] = MysqlConnection(host='localhost',user='root',password='root')  
+    model._meta['rdbms'] = MysqlConnection(host='0.0.0.0',user='root',password='root')  
     sql = model.create_table()
     sql_password_table = model.create_password_table()
     expected_sql_password_table = ('CREATE TABLE IF NOT EXISTS passwords (id INTEGER PRIMARY KEY,hash VARCHAR(32) NOT NULL,salt VARCHAR(16) NOT NULL);')
@@ -236,7 +236,7 @@ def test_sqlite_insert_data():
 
 def test_mysql_filter_data():
     instance = DummyModel()
-    instance._meta['rdbms'] =  MysqlConnection(host='localhost',user='root',password='root')
+    instance._meta['rdbms'] =  MysqlConnection(host='0.0.0.0',user='root',password='root')
 
     query,values = instance.filter(age__lt=30,email='simon@gmail.com')
     expected_query = 'SELECT * FROM dummymodel WHERE email = %s AND age < %s'
@@ -257,9 +257,9 @@ def test_sqlite_filter_data():
     assert values == expected_values   
 
 
-def test_select_all():
+def test_mysql_select_all():
     mysql_conn_instance = DummyModel()    
-    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='localhost',user='root',password='root')    
+    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='0.0.0.0',user='root',password='root')    
 
     mysql_query = mysql_conn_instance.all()    
     mysql_expected_query = 'SELECT * FROM dummymodel;'    
@@ -278,7 +278,7 @@ def test_sqlite_select_all():
 
 def test_mysql_delete_data():
     mysql_conn_instance = DummyModel()   
-    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='localhost',user='root',password='root')    
+    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='0.0.0.0',user='root',password='root')    
 
     mysql_query,mysql_values = mysql_conn_instance.delete(id=1)    
     mysql_expected_query = 'DELETE FROM dummymodel WHERE id = %s;'  
