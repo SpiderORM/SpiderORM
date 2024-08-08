@@ -30,11 +30,5 @@ jobs:
     - name: Publish to PyPI
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: pypi-AgEIcHlwaS5vcmcCJGI1NzRjMGQ4LWNjZDYtNDVlOS1iZDkyLWFhNjE0NDk0Y2QzZAACKlszLCI4ZDBlMzJhNC1lZjRhLTRiNjEtYTczOC1iMTJmNmZhNTAyZmEiXQAABiCn7_NQLcG6CHi5yruBC9C2IIPuAF62_HFClNshCEUoZg
-      
-      run: |
-        echo ${{ secrets.PY_PI_PASSWORD }}
-        twine upload --verbose -r pypi dist/*
-
-    - name: Clean up build artifacts
-      run: rm -rf build dist *.egg-info
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: twine upload dist/*
