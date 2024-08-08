@@ -31,7 +31,10 @@ jobs:
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: twine upload -r pypi dist/*
+      
+      run: |
+        echo ${{ secrets.PYPI_PASSWORD }}
+        twine upload --verbose -r pypi dist/*
 
     - name: Clean up build artifacts
       run: rm -rf build dist *.egg-info
