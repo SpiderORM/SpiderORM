@@ -15,7 +15,7 @@ jobs:
         image: mysql:latest
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test
+          MYSQL_DATABASE: root
         ports:
           - 3306:3306
         options: >-
@@ -39,8 +39,8 @@ jobs:
         pip install -r requirements.txt
 
     - name: Wait for MySQL to be ready
-      run: until mysqladmin ping -h127.0.0.1 --silent; do echo "Waiting for MySQL..."; sleep 1; done
+      run: until mysqladmin ping -hlocalhost --silent; do echo "Waiting for MySQL..."; sleep 1; done
 
     - name: Run tests with pytest
       run: |
-        pytest -vv --mysql-host=127.0.0.1 --mysql-port=3306 --mysql-user=root --mysql-password=root_password
+        pytest -vv --mysql-host=localhost --mysql-port=3306 --mysql-user=root --mysql-password=root_password
