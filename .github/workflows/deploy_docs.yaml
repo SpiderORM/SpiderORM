@@ -2,7 +2,7 @@ name: Deploy Docs
 
 on: 
   workflow_run:
-    workflows: ["Run Tests"]
+    workflows: ["CI"]
     types:
      - completed
 
@@ -26,3 +26,4 @@ jobs:
           pip install -r requirements.txt
     
       - name: Deploy to Netlify
+        run: echo ' Deploy to Netlify '
