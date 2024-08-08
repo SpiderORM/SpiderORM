@@ -1,7 +1,7 @@
 from setuptools import setup,find_packages
 
 setup(
-    name="spiderweb_orm",
+    name="spider-orm",
     version="0.1.0",
     packages=find_packages(),
     include_package_data=True,
@@ -23,7 +23,7 @@ setup(
     author="Simão Domingos de Oliveira António",
     author_email="simaodomingos413@gmail.com",
     description="""
-        SpiderWeb ORM is a lightweight and flexible ORM (Object-Relational Mapping) library for Python.        
+        Spider-ORM is a lightweight and flexible ORM (Object-Relational Mapping) library for Python.        
         """,
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
