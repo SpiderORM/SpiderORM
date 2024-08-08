@@ -45,4 +45,7 @@ jobs:
       run: pytest --continue-on-collection-errors
     
     - name: Create Tag
-      run: git tag v.0.1.0
+      run: git tag v0.1.0
+
+    - name: Push tag
+      run: git push v0.1.0
