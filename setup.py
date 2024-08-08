@@ -15,11 +15,6 @@ setup(
             'mysqlclient'
         ],
     },
-    entry_points={
-        'console_scripts':[
-            'command=spiderweb_orm.module:function', # Para quando se criar o CLI
-        ],
-    },
     author="Simão Domingos de Oliveira António",
     author_email="simaodomingos413@gmail.com",
     description="""
