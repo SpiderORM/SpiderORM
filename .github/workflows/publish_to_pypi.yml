@@ -3,10 +3,9 @@ name: Publish Python Package
 on:
   push:
     tags:
-      - v*.*.* # Isso será acionado quando uma tag que começa com "v" seguida por números, como v1.0.0, for criada
+      - v*.*.*  # Isso será acionado quando uma tag que começa com "v" seguida por números, como v1.0.0, for criada
     branches:
-      - main
-    
+      - main 
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,20 +17,28 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12.2'  # Substitua pela versão do Python que você deseja usar
+        python-version: '3.x'  # Substitua pela versão do Python que você deseja usar
 
     - name: Install dependencies
       run: |
+        python -m pip install --upgrade pip
         pip install setuptools wheel twine
+
+    - name: Configure .pypirc
+      run: |
+        echo "[distutils]" > ~/.pypirc
+        echo "index-servers =" >> ~/.pypirc
+        echo "    pypi" >> ~/.pypirc
+        echo "[pypi]" >> ~/.pypirc
+        echo "repository = https://upload.pypi.org/legacy/" >> ~/.pypirc
+        echo "username = ${{ secrets.PYPI_USERNAME }}" >> ~/.pypirc
+        echo "password = ${{ secrets.PYPI_PASSWORD }}" >> ~/.pypirc
 
     - name: Build the package
       run: python setup.py sdist bdist_wheel
 
     - name: Publish to PyPI
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: twine upload dist/*
+      run: twine upload -r pypi dist/*
 
     - name: Clean up build artifacts
       run: rm -rf build dist *.egg-info
