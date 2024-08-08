@@ -25,8 +25,7 @@ jobs:
       - name: Run Test
         id: run-tests
         run: |
-          pytest -vv --continue-on-errors
-        
+          pytest --continue-on-collection-errors
 
       - name: Set test status
         if: success()
