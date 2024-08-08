@@ -9,7 +9,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
     
-      - name: Set up Python ${{ matrix.python-versio }}
+      - name: Set up Python 3.12.2
         uses: actions/setup-python@v3
         with:
           python-version: 3.12.2
@@ -17,9 +17,11 @@ jobs:
       - name: Install dependecies
         run: |
           pip install -r requirements.txt
+          
       - name: Set up mysql
         uses: mirromutth/mysql-action@v1.1
         with:
+          mysql host: localhost
           mysql root password: ${{ secrets.RootPassword }} # Required if "mysql user" is empty, default is empty. The root superuser password
           mysql user: 'root' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
           mysql password: ${{ secrets.DatabasePassword }} # Required if "mysql user" exists. The password for the "mysql user"
