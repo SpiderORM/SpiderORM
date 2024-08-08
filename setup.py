@@ -12,6 +12,7 @@ setup(
         'dev': [
             'pytest>=3.7',
             'sphinx',
+            'mysqlclient'
         ],
     },
     entry_points={
@@ -24,7 +25,7 @@ setup(
     description="""
         SpiderWeb ORM is a lightweight and flexible ORM (Object-Relational Mapping) library for Python.        
         """,
-    long_description=open('README-en.md').read(),
+    long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/simondev413/sipderweb-ORM-v0.1',
     classifiers=[
