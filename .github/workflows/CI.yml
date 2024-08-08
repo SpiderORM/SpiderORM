@@ -42,5 +42,5 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Tests
-      run: pytest -vv --maxfail=5
+      run: pytest --continue-on-collection-errors
     
