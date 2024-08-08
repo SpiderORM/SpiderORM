@@ -5,7 +5,8 @@ on:
     workflows: ["CI"]
     types:
      - completed
-    branches: gh-pages
+    branches: 
+     - gh-pages
 
 jobs:
   deploy:
