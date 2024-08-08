@@ -12,7 +12,7 @@ path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(path)
 
 
-from spiderweb_orm import fields, models, sanitizers
+from spiderweb_orm import fields, models
 from spiderweb_orm.mysql.connection import MysqlConnection
 
 # Create a DB Connection
