@@ -6,13 +6,12 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        
+        'mysqlclient',
     ],
     extras_require={
         'dev': [
             'pytest>=3.7',
             'sphinx',
-            'mysqlclient'
         ],
     },
     author="Simão Domingos de Oliveira António",
