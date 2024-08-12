@@ -21,10 +21,10 @@ setup(
         """,
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/simondev413/sipderweb-ORM-v0.1',
+    url='https://github.com/simondev413/Spider-ORM-v0.1',
     classifiers=[
         'Programming Language :: Python :: 3',
-        "License :: OSI Aproved :: MIT License",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
