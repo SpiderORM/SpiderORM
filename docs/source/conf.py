@@ -6,21 +6,26 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'SpiderWeb ORM'
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../src'))  # Ajuste o caminho conforme necessário
+
+
+project = 'Spider ORM'
 copyright = '2024, Simão Domingos De Oliveira António'
 author = 'Simão Domingos De Oliveira António'
-release = '0.1.0'
+release = '0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon'
-    ]
+    'sphinx.ext.napoleon',  # Para suportar Google e NumPy style docstrings
+]
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = []
 
 
 
