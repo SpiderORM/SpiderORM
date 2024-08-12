@@ -20,12 +20,10 @@ Spider-ORM is a Python ORM (Object-Relational Mapping) library designed to simpl
 
 ## Installation
 
-To install Spider-ORM, clone the repository and install the dependencies:
+To install Spider-ORM, open the terminal and type:
 
 ```bash
-git clone https://github.com/your-username/spider-orm.git
-cd spider-orm
-pip install -r requirements.txt
+pip install spider-orm
 ```
 
 ## Configuration
