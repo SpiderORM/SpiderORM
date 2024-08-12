@@ -7,9 +7,9 @@ for root, dirs, files in os.walk(path):
     for _dir in dirs:
         sys.path.append(_dir)
 
-from spiderweb_orm.models import Model
-from spiderweb_orm import fields
-from spiderweb_orm.sqlite.sqlite_connection import SQLIteConnection
+from spider.models import Model
+from spider import fields
+from spider.sqlite.sqlite_connection import SQLIteConnection
 
 class Product(Model):
     id = fields.IntegerField(primary_key=True,auto_increment=True)
