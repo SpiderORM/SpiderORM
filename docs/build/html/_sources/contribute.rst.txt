@@ -11,8 +11,8 @@ Ways to Contribute
 
 2. **Submit Bug Reports**
    - If you encounter any bugs or issues while using the project, please report them. You can do this by:
-     - **Creating an Issue**: Open a new issue on our GitHub repository and provide a detailed description of the problem.
-     - **Providing Reproduction Steps**: Include steps to reproduce the issue to help us understand and address it quickly.
+      - **Creating an Issue**: Open a new issue on our GitHub repository and provide a detailed description of the problem.
+      - **Providing Reproduction Steps**: Include steps to reproduce the issue to help us understand and address it quickly.
 
 3. **Submit Feature Requests**
    - If you have an idea for a new feature or enhancement, let us know! Open a new issue or submit a feature request with a detailed description of your idea.

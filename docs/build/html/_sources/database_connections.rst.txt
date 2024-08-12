@@ -10,22 +10,24 @@ Creating a Connection
 ----------------------
 By default, the framework uses the SQLite connection. To use MySQL, you must specify the desired connection in the `MetaData` class of your model. See the example below:
 
-    .. code-block:: python
-        from spiderweb.db import MysqlConnection
+   .. code-block:: python
 
-        # MySQL database connection configuration example
-        DB_CONNECTION = MysqlConnection(
-            host='localhost',
-            user='root',
-            password='root',
-            database='mysql_db')
+       from spiderweb_orm import fields, models
+       from spiderweb_orm.mysql.connection import MysqlConnection
 
-        # Define your model
-        class User(models.Model):
-            ...
-
-            class MetaData:
-                rdbms = DB_CONNECTION
-
-        # You can create a model without specifying the RDBMS
-        # By default Spider-ORM uses SQLite3    
+       # Create a DB Connection
+       DB_CONNECTION = MysqlConnection(
+           host='localhost',
+           user='root',
+           password='root',
+           database='mysql_db'
+       )
+    
+       # Define your model
+       class User(models.Model):
+           ...
+           class MetaData:
+               rdbms = DB_CONNECTION
+       
+       # You can create a model without specifying the RDBMS
+       # By default Spider-ORM uses SQLite3    

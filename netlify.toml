@@ -1,0 +1,18 @@
+[build]
+  # O comando para construir a documentação
+  command = "sphinx-build -b html . _build"
+  
+  # O diretório onde os arquivos construídos estão localizados
+  publish = "_build"
+  
+  # Especifica qual imagem base o Netlify usará para construir o projeto
+  environment = { PYTHON_VERSION = "3.12.2" }
+
+[context.production.environment]
+  SPHINX_THEME = "sphinx_rtd_theme"
+
+[[plugins]]
+  package = "netlify-plugin-sitemap"
+
+[[plugins]]
+  package = "netlify-plugin-minify-html"

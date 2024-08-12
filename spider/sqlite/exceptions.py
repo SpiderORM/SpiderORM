@@ -1,2 +1,0 @@
-class DatabaseCreateError(Exception):
-    pass
