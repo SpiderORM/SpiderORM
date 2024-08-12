@@ -297,7 +297,7 @@ def test_mysql_create_table():
     Verifica a criação tanto da tabela principal quanto da tabela de senhas.
     """
     model = DummyModel()
-    model._meta['rdbms'] = MysqlConnection(host='localhost', user='root', password='root')
+    model._meta['rdbms'] = MysqlConnection(host='0.0.0.0', user='root', password='root')
     sql = model.create_table()
     sql_password_table = model.create_password_table()
 
@@ -359,7 +359,7 @@ def test_mysql_insert_data():
         email='simon@gmail.com',
         password='12354'
     )
-    instance._meta['rdbms'] = MysqlConnection(host='localhost', user='root', password='root')
+    instance._meta['rdbms'] = MysqlConnection(host='0.0.0.0', user='root', password='root')
     sql, dtime = instance.save(), datetime.now()
     query, values = sql
     has_password_insert = instance.has_password_insert()
@@ -422,7 +422,7 @@ def test_mysql_filter_data():
     Verifica se a declaração SQL de seleção e os valores correspondem ao esperado para os critérios fornecidos.
     """
     instance = DummyModel()
-    instance._meta['rdbms'] = MysqlConnection(host='localhost', user='root', password='root')
+    instance._meta['rdbms'] = MysqlConnection(host='0.0.0.0', user='root', password='root')
 
     query, values = instance.filter(age__lt=30, email='simon@gmail.com')
     expected_query = 'SELECT * FROM dummymodel WHERE email = %s AND age < %s'
@@ -454,7 +454,7 @@ def test_mysql_select_all():
     Verifica se a declaração SQL de seleção corresponde ao esperado.
     """
     mysql_conn_instance = DummyModel()    
-    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='localhost', user='root', password='root')    
+    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='0.0.0.0', user='root', password='root')    
 
     mysql_query = mysql_conn_instance.all()    
     mysql_expected_query = 'SELECT * FROM dummymodel;'    
@@ -482,7 +482,7 @@ def test_mysql_delete_data():
     Verifica se a declaração SQL de exclusão e o valor do ID correspondem ao esperado.
     """
     mysql_conn_instance = DummyModel()   
-    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='localhost', user='root', password='root')    
+    mysql_conn_instance._meta['rdbms'] = MysqlConnection(host='0.0.0.0', user='root', password='root')    
 
     mysql_query, mysql_values = mysql_conn_instance.delete(id=1)    
     mysql_expected_query = 'DELETE FROM dummymodel WHERE id = %s;'  
