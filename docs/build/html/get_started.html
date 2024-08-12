@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Getting Started &#8212; Spider ORM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<p>Spider-ORM simplifies working with relational databases by using Python objects. Follow these steps to get started with Spider-ORM:</p>
+<ol class="arabic">
+<li><p><strong>Setup a Database Connection</strong></p>
+<p>Begin by creating a database connection. For instance, to connect to a MySQL database, use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">spiderweb_orm</span> <span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">spiderweb_orm.mysql.connection</span> <span class="kn">import</span> <span class="n">MysqlConnection</span>
+
+<span class="c1"># Create a DB Connection</span>
+<span class="n">DB_CONNECTION</span> <span class="o">=</span> <span class="n">MysqlConnection</span><span class="p">(</span>
+    <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span>
+    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;mysql_db&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create Models</strong></p>
+<p>Define your data models by creating classes that inherit from <cite>models.Model</cite>. Use Spider-ORM’s field types to specify the attributes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_increment</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">PasswordField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">joined_on</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">ImageField</span><span class="p">()</span>
+    <span class="n">is_active</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">MetaData</span><span class="p">:</span>
+        <span class="n">rdbms</span> <span class="o">=</span> <span class="n">DB_CONNECTION</span>
+
+
+ <span class="c1"># You can create a model without specifying the RDBMS</span>
+ <span class="c1"># By default Spider-ORM uses SQLite3</span>
+<span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_increment</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">discount</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">FloatField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">5.2</span><span class="p">)</span>
+    <span class="n">manufacture_date</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">added_on</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">ImageField</span><span class="p">()</span>
+    <span class="n">in_stock</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create Tables</strong></p>
+<p>To create tables in the database, instantiate your models and call the <cite>create_table</cite> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user_table</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+<span class="n">user_table</span><span class="o">.</span><span class="n">create_table</span><span class="p">()</span>
+
+<span class="n">product_table</span> <span class="o">=</span> <span class="n">Product</span><span class="p">()</span>
+<span class="n">product_table</span><span class="o">.</span><span class="n">create_table</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Insert Data</strong></p>
+<p>Create instances of your models and save them to the database:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Simon Dev&#39;</span><span class="p">,</span>
+    <span class="n">email</span><span class="o">=</span><span class="s1">&#39;simondev@gmail.com&#39;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s1">&#39;mypassword&#39;</span><span class="p">,</span>
+    <span class="n">image</span><span class="o">=</span><span class="s1">&#39;img.png&#39;</span>
+<span class="p">)</span>
+<span class="n">product</span> <span class="o">=</span> <span class="n">Product</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Laptop&#39;</span><span class="p">,</span>
+    <span class="n">price</span><span class="o">=</span><span class="mf">1200.32</span><span class="p">,</span>
+    <span class="n">image</span><span class="o">=</span><span class="s1">&#39;img.jpg&#39;</span><span class="p">,</span>
+    <span class="n">in_stock</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data in the database</span>
+<span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="n">product</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Retrieve Data</strong></p>
+<p>Retrieve data from the database using methods provided by Spider-ORM:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get all users and products</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">user_table</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">product_table</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="c1"># Retrieve specific records by ID</span>
+<span class="n">user_1</span> <span class="o">=</span> <span class="n">user_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">product_1</span> <span class="o">=</span> <span class="n">product_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Filter Data</strong></p>
+<p>Use filter methods to find records that match specific conditions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter users with id less than 20 and active</span>
+<span class="n">users_filtered</span> <span class="o">=</span> <span class="n">user_table</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__lt</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Filter products with price between 1000 and 3000 and discount greater than 5</span>
+<span class="n">products_filtered</span> <span class="o">=</span> <span class="n">product_table</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">price__bt</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">),</span> <span class="n">discount__gt</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Delete Data</strong></p>
+<p>Delete records from the database:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Delete user with id = 1</span>
+<span class="n">user_table</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Delete product with id = 2</span>
+<span class="n">product_table</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Update Data</strong></p>
+<p>Update existing records:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update user email</span>
+<span class="n">user_table</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;newemail@gmail.com&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Update product name and price</span>
+<span class="n">product_table</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;New Name&#39;</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>For more detailed usage and advanced features of Spider-ORM, refer to the full documentation.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Spider ORM</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fields.html">Field Types Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_connections.html">Database Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing to the Project</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Simão Domingos De Oliveira António.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/get_started.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
