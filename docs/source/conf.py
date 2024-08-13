@@ -9,7 +9,7 @@
 project = 'Spider ORM'
 copyright = '2024, Simão Domingos De Oliveira António'
 author = 'Simão Domingos De Oliveira António'
-release = '0.1.3'
+release = '0.1.5'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
