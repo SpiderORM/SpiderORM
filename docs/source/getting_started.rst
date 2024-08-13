@@ -9,8 +9,8 @@ Spider-ORM simplifies working with relational databases by using Python objects.
 
    .. code-block:: python
 
-       from spiderweb_orm import fields, models
-       from spiderweb_orm.mysql.connection import MysqlConnection
+       from spider import fields, models
+       from spider.mysql.connection import MysqlConnection
 
        # Create a DB Connection
        DB_CONNECTION = MysqlConnection(
