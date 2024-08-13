@@ -94,8 +94,8 @@
 <h2>Creating a Connection<a class="headerlink" href="#creating-a-connection" title="Link to this heading"></a></h2>
 <p>By default, the framework uses the SQLite connection. To use MySQL, you must specify the desired connection in the <cite>MetaData</cite> class of your model. See the example below:</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">spiderweb_orm</span> <span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">spiderweb_orm.mysql.connection</span> <span class="kn">import</span> <span class="n">MysqlConnection</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">spider</span> <span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">spider.mysql.connection</span> <span class="kn">import</span> <span class="n">MysqlConnection</span>
 
 <span class="c1"># Create a DB Connection</span>
 <span class="n">DB_CONNECTION</span> <span class="o">=</span> <span class="n">MysqlConnection</span><span class="p">(</span>
