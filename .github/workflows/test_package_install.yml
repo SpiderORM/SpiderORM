@@ -16,9 +16,3 @@ jobs:
 
     - name: Verify the Package 
       run: pip show spider-orm
-
-    - name: Search in installed packages
-      run: |
-        python3
-        help()
-        modules
