@@ -1,11 +1,8 @@
 name: Publish Python Package
 
-on:
-  push:
-    tags:
-      - 'v*.*.*'  # Isso será acionado quando uma tag que começa com "v" seguida por números, como v1.0.0, for criada
-    branches:
-      - main 
+on: 
+  release:
+    types: ['published','edited']
 
 jobs:
   build:
