@@ -3,11 +3,14 @@ name: Test package install
 on: workflow_dispatch
 
 jobs:
-  runs_on: ubuntu-latest
   build:
+    runs-on: ubuntu-latest 
     steps:
     - name: Set up Python 
       uses: actions/setup-python@v4
       
     - name: Install Package 
       run: pip install spider-orm
+
+    - name: Verify the Package 
+      run: pip show spider-orm
