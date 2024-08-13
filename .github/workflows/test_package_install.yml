@@ -19,6 +19,6 @@ jobs:
 
     - name: Search in installed packages
       run: |
-        py
+        python3
         help()
         modules
