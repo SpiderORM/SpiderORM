@@ -12,8 +12,8 @@ By default, the framework uses the SQLite connection. To use MySQL, you must spe
 
    .. code-block:: python
 
-       from spiderweb_orm import fields, models
-       from spiderweb_orm.mysql.connection import MysqlConnection
+       from spider import fields, models
+       from spider.mysql.connection import MysqlConnection
 
        # Create a DB Connection
        DB_CONNECTION = MysqlConnection(
