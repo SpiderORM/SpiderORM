@@ -4,7 +4,7 @@ Spider-ORM is a lightweight and modular Object-Relational Mapping (ORM) library 
 
 ## Documentation
 
-For full documentation and getting started guides, visit our official documentation site: [Spider-ORM Documentation](https://spider-orm.netlify.app)
+For full documentation and getting started guides, visit our official documentation site: [Spider-ORM Documentation](/CONTRIBUTING.md)
 
 ## Contributing
 
