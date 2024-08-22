@@ -4,11 +4,11 @@ Spider-ORM is a lightweight and modular Object-Relational Mapping (ORM) library 
 
 ## Documentation
 
-For full documentation and getting started guides, visit our official documentation site: [Spider-ORM Documentation](/CONTRIBUTING.md)
+For full documentation and getting started guides, visit our official documentation site: [Spider-ORM Documentation](https://spider-orm.netlify.app)
 
 ## Contributing
 
-We welcome contributions from the community! Whether you're fixing bugs, adding new features, or improving the documentation, your help is appreciated. Please check our [contributing guidelines](https://spider-orm.netlify.app/contributing) for more details on how to get involved.
+We welcome contributions from the community! Whether you're fixing bugs, adding new features, or improving the documentation, your help is appreciated. Please check our [contributing](/CONTRIBUTING.md) for more details on how to get involved.
 
 
 Are you interested in shaping the future of database management in Python? Join us in making Spider-ORM the go-to ORM for developers worldwide. Whether you're a seasoned developer or just starting out, your contributions and feedback are invaluable.
