@@ -8,7 +8,7 @@ For full documentation and getting started guides, visit our official documentat
 
 ## Contributing
 
-We welcome contributions from the community! Whether you're fixing bugs, adding new features, or improving the documentation, your help is appreciated. Please check our [contributing conduct](/CONTRIBUTING.md) for more details on how to get involved.
+We welcome contributions from the community! Whether you're fixing bugs, adding new features, or improving the documentation, your help is appreciated. Please check our [contributing guidelines](/CONTRIBUTING.md) for more details on how to get involved.
 
 
 Are you interested in shaping the future of database management in Python? Join us in making Spider-ORM the go-to ORM for developers worldwide. Whether you're a seasoned developer or just starting out, your contributions and feedback are invaluable.
