@@ -90,8 +90,6 @@ class Model(metaclass=ModelMeta):
         sql, sql_safely_password_store = TableSQL.create_table_sql(self)
         with self._rdbms() as conn:
             conn.execute(sql)
-            if sql_safely_password_store:
-                conn.execute(sql_safely_password_store)
             print('Table created successfully.')
 
     def filter(self, **kwargs):
@@ -161,7 +159,7 @@ class Model(metaclass=ModelMeta):
             conn.execute(query, values)
             conn.execute(f'SELECT * FROM {self.__class__.__name__.lower()};')
             pk = conn.fetchall()[-1][0]
-            if has_password:
+            ''' if has_password:
                 password = None
                 conn.execute(f'UPDATE {self.__class__.__name__.lower()} SET passwordID = {pk} WHERE id = {pk};')
                 for field_name, field_class in self._fields.items():
@@ -180,7 +178,7 @@ class Model(metaclass=ModelMeta):
                     salt=salt.to_bytes(),
                     iterations=_iter
                 ).hex()
-                query = f"INSERT INTO passwords (id, hash, salt) VALUES ({pk}, '{_hash}', '{salt}');"
+                query = f"INSERT INTO passwords (id, hash, salt) VALUES ({pk}, '{_hash}', '{salt}');"'''
                 conn.execute(query)
             print("Data recorded successfully.")
 

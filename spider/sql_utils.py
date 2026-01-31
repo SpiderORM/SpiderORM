@@ -69,13 +69,8 @@ class TableSQL:
         auto_increment = ' AUTO_INCREMENT' if isinstance(rdbms, MysqlConnection) else ' AUTOINCREMENT'
 
         for field_name, field in cls._fields.items():
-            if isinstance(field, PasswordField):
-                field_def = f"{field_name}ID {SQLTypeGenerator.get_sql_type(field)}"
-            else:
-                field_def = f"{field_name} {SQLTypeGenerator.get_sql_type(field)}"
+            field_def = f"{field_name} {SQLTypeGenerator.get_sql_type(field)}"
                 
-            if isinstance(field, PasswordField):
-                sql_safely_password_store_table = f'CREATE TABLE IF NOT EXISTS passwords (id INTEGER PRIMARY KEY, hash VARCHAR({field.max_length}) NOT NULL, salt VARCHAR({field.salt_size}) NOT NULL);'
             if field.primary_key:
                 field_def += ' PRIMARY KEY'
             if getattr(field, 'auto_increment', False):
@@ -89,7 +84,7 @@ class TableSQL:
 
             fields_definitions.append(field_def)
         fields_sql = ",".join(fields_definitions)
-        return f"CREATE TABLE IF NOT EXISTS {cls.__class__.__name__.lower()} ({fields_sql});", sql_safely_password_store_table
+        return f"CREATE TABLE IF NOT EXISTS {cls.__class__.__name__.lower()} ({fields_sql});"
 
     @staticmethod
     def insert_data_sql(cls):
@@ -117,7 +112,7 @@ class TableSQL:
             else:
                 if isinstance(field_class, PasswordField):
                     fields.append(f'{field}ID')
-                    has_password_field = True
+                    #has_password_field = True
                 else:
                     fields.append(field)
                 value = getattr(cls, field)
