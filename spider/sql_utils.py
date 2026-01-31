@@ -1,5 +1,5 @@
 from spider.fields import *
-from spider.sqlute.connection import SqliteConnection
+from spider.sqlite.sqlite_connection import SqliteConnection
 from datetime import datetime
 
 class SQLTypeGenerator:
