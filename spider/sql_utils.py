@@ -66,7 +66,7 @@ class TableSQL:
         rdbms = cls._meta.get('rdbms')
         fields_definitions = []
         sql_safely_password_store_table = None
-        auto_increment = ' AUTOINCREMENT' if isinstance(rdbms, SqliteConnection) else ' AUTO_INCREMENT'
+        auto_increment = ' AUTOINCREMENT' if isinstance(rdbms, SQLIteConnection) else ' AUTO_INCREMENT'
 
         for field_name, field in cls._fields.items():
             field_def = f"{field_name} {SQLTypeGenerator.get_sql_type(field)}"
@@ -101,7 +101,7 @@ class TableSQL:
         fields = []
         values = []
         rdbms = cls._meta.get('rdbms')
-        _format_str = '?' if isinstance(rdbms, SQliteConnection) else '%s'
+        _format_str = '?' if isinstance(rdbms, SQLIteConnection) else '%s'
         has_password_field = False
 
         for field, field_class in cls._fields.items():
@@ -165,7 +165,7 @@ class TableSQL:
         kwargs__bt = {}  # between
         params = []
         values = []
-        _format_str = '?' if isinstance(cls._meta.get('rdbms'), SQliteConnection) else '%s'
+        _format_str = '?' if isinstance(cls._meta.get('rdbms'), SQLIteConnection) else '%s'
 
         for key, value in kwargs.items():
             if key.endswith('__lt'):
@@ -242,14 +242,14 @@ class TableSQL:
         Returns:
         - tuple: A tuple containing the DELETE SQL statement and a list with the ID value.
         """
-        _format_str = '?' if isinstance(cls._meta.get('rdbms'), SqliteConnection) else '%s'
+        _format_str = '?' if isinstance(cls._meta.get('rdbms'), SQLIteConnection) else '%s'
         return f"DELETE FROM {cls.__class__.__name__.lower()} WHERE id = {_format_str};", [id]
 
     
     def update_data_sql(self,cls,kwargs):    
         params:list = []
         values:list = []     
-        _format_str = '?' if isinstance(cls._meta.get('rdbms'),SqliteConnection) else '%s'
+        _format_str = '?' if isinstance(cls._meta.get('rdbms'),SQLIteConnection) else '%s'
         
         field_to_update = [field for field in kwargs.keys() if self.get_field_type(field,cls)][0]        
         value_updated = [value for value in kwargs.values()][0]
