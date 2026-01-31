@@ -328,7 +328,7 @@ def test_sqlite_create_table():
         'name VARCHAR(120) UNIQUE,'
         'age INTEGER,'
         'email VARCHAR(120) UNIQUE,'
-        'password VARCHAR(255)'
+        'password VARCHAR(255)',
         'created_at DATETIME,'
         'updated_at DATETIME);'
     )
