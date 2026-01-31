@@ -36,7 +36,7 @@ class DummyModel(Model):
         Returns:
         - str: A declaração SQL para criar a tabela.
         """
-        sql = TableSQL().create_table_sql(self)[0]
+        sql = TableSQL().create_table_sql(self)
         return sql
 
     def create_password_table(self):
