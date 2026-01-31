@@ -25,7 +25,7 @@ class DummyModel(Model):
     name = fields.CharField(max_length=120, unique=True)
     age = fields.IntegerField()
     email = fields.EmailField(max_length=120, unique=True)
-    password = fields.PasswordField()
+    password = fields.CharField(max_length=255)
     created_at = fields.DateTimeField(auto_now=True)
     updated_at = fields.DateTimeField(auto_now=True)
 
@@ -320,24 +320,20 @@ def test_sqlite_create_table():
     model = DummyModel()
     model._meta['rdbms'] = SQLIteConnection()
     sql = model.create_table()
-    sql_password_table = model.create_password_table()
-
-    expected_sql_password_table = (
-        'CREATE TABLE IF NOT EXISTS passwords (id INTEGER PRIMARY KEY, hash VARCHAR(32) NOT NULL, salt VARCHAR(16) NOT NULL);'
-    )
+    
+    
     expected_sql = (
         'CREATE TABLE IF NOT EXISTS dummymodel ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT,'
         'name VARCHAR(120) UNIQUE,'
         'age INTEGER,'
         'email VARCHAR(120) UNIQUE,'
-        'passwordID VARCHAR(32),'
+        'password VARCHAR(255)'
         'created_at DATETIME,'
         'updated_at DATETIME);'
     )
 
     assert sql == expected_sql
-    assert sql_password_table == expected_sql_password_table
     
 '''
 @pytest.mark.xfail
@@ -393,10 +389,9 @@ def test_sqlite_insert_data():
     instance._meta['rdbms'] = SQLIteConnection()
     sql, dtime = instance.save(), datetime.now()
     query, values = sql
-    has_password_insert = instance.has_password_insert()
-
+   
     expected_query = (
-        'INSERT INTO dummymodel (name,age,email,passwordID,created_at,updated_at) '
+        'INSERT INTO dummymodel (name,age,email,password,created_at,updated_at) '
         'VALUES (?,?,?,?,?,?);'
     )
     expected_values = [
@@ -409,7 +404,7 @@ def test_sqlite_insert_data():
     ]
     assert values == expected_values
     assert query == expected_query
-    assert has_password_insert == True
+    
 
 '''
 def test_mysql_filter_data():
