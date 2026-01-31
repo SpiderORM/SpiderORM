@@ -157,29 +157,6 @@ class Model(metaclass=ModelMeta):
         pk = None
         with self._rdbms() as conn:
             conn.execute(query, values)
-            conn.execute(f'SELECT * FROM {self.__class__.__name__.lower()};')
-            pk = conn.fetchall()[-1][0]
-            ''' if has_password:
-                password = None
-                conn.execute(f'UPDATE {self.__class__.__name__.lower()} SET passwordID = {pk} WHERE id = {pk};')
-                for field_name, field_class in self._fields.items():
-                    if isinstance(field_class, PasswordField):
-                        password = getattr(self, field_name)
-                        salt = field_class.salt
-                        hash_name = field_class.hash
-                        _iter = field_class.iterations
-
-                from hashlib import pbkdf2_hmac
-
-                salt = salt[0]
-                _hash = pbkdf2_hmac(
-                    hash_name=hash_name,
-                    password=password.encode(),
-                    salt=salt.to_bytes(),
-                    iterations=_iter
-                ).hex()
-                query = f"INSERT INTO passwords (id, hash, salt) VALUES ({pk}, '{_hash}', '{salt}');"'''
-                conn.execute(query)
             print("Data recorded successfully.")
 
     def delete(self, id):
