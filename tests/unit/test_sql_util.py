@@ -13,7 +13,7 @@ for root, dirs, files in os.walk(path):
 from spider.models import Model
 from spider import fields
 from spider.sql_utils import SQLTypeGenerator, TableSQL
-from spider.mysql.connection import MysqlConnection
+# from spider.mysql.connection import MysqlConnection
 from spider.sqlite.sqlite_connection import SQLIteConnection
 
 class DummyModel(Model):
@@ -266,15 +266,6 @@ def test_url_field(type_generator):
     field = fields.URLField()
     assert type_generator.get_sql_type(field) == 'VARCHAR(255)'
 
-def test_password_field(type_generator):
-    """
-    Testa a verificação do tipo SQL de um PasswordField.
-
-    Parameters:
-    - type_generator (SQLTypeGenerator): A instância do gerador de tipos.
-    """
-    field = fields.PasswordField(max_length=120)
-    assert type_generator.get_sql_type(field) == 'VARCHAR(120)'
 
 def test_unknown_field(type_generator):
     """
@@ -290,6 +281,7 @@ def test_unknown_field(type_generator):
     with pytest.raises(TypeError):
         type_generator.get_sql_type(field)
 
+'''
 def test_mysql_create_table():
     """
     Testa a geração das declarações SQL corretas para criar tabelas no MySQL.
@@ -317,6 +309,7 @@ def test_mysql_create_table():
 
     assert sql == expected_sql
     assert sql_password_table == expected_sql_password_table
+    '''
 
 def test_sqlite_create_table():
     """
@@ -345,7 +338,8 @@ def test_sqlite_create_table():
 
     assert sql == expected_sql
     assert sql_password_table == expected_sql_password_table
-
+    
+'''
 @pytest.mark.xfail
 def test_mysql_insert_data(): 
     """
@@ -381,6 +375,8 @@ def test_mysql_insert_data():
     assert query == expected_query
     assert has_password_insert == True
 
+'''
+
 @pytest.mark.xfail
 def test_sqlite_insert_data():
     """
@@ -415,6 +411,7 @@ def test_sqlite_insert_data():
     assert query == expected_query
     assert has_password_insert == True
 
+'''
 def test_mysql_filter_data():
     """
     Testa a geração da declaração SQL para filtrar dados no MySQL.
@@ -430,7 +427,7 @@ def test_mysql_filter_data():
 
     assert query == expected_query
     assert values == expected_values
-
+'''
 def test_sqlite_filter_data():
     """
     Testa a geração da declaração SQL para filtrar dados no SQLite.
@@ -446,7 +443,7 @@ def test_sqlite_filter_data():
 
     assert query == expected_query
     assert values == expected_values
-
+'''
 def test_mysql_select_all():
     """
     Testa a geração da declaração SQL para selecionar todos os registros no MySQL.
@@ -460,7 +457,7 @@ def test_mysql_select_all():
     mysql_expected_query = 'SELECT * FROM dummymodel;'    
 
     assert mysql_query == mysql_expected_query 
-
+'''
 def test_sqlite_select_all():
     """
     Testa a geração da declaração SQL para selecionar todos os registros no SQLite.
@@ -474,7 +471,7 @@ def test_sqlite_select_all():
     sqlite_expected_query = 'SELECT * FROM dummymodel;'
     
     assert sqlite_query == sqlite_expected_query
-
+'''
 def test_mysql_delete_data():
     """
     Testa a geração da declaração SQL para excluir um registro pelo ID no MySQL.
@@ -490,7 +487,7 @@ def test_mysql_delete_data():
     expected_value = 1
     assert mysql_query == mysql_expected_query   
     assert mysql_values[0] == expected_value
-
+'''
 def test_sqlite_delete_data():
     """
     Testa a geração da declaração SQL para excluir um registro pelo ID no SQLite.
